@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import EmailPassword from '../components/login';
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
@@ -28,7 +29,7 @@ function getDevMenuHint() {
   );
 }
 
-export default function HomeScreen() {
+function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
@@ -96,3 +97,8 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.four,
   },
 });
+
+
+export default function main() {
+    return(<EmailPassword></EmailPassword>)
+}
