@@ -49,6 +49,9 @@ export default function HomeScreen() {
             title="Try editing"
             hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
           />
+          <a href="app/login.tsx" target="_blank" rel="noopener noreferrer">
+            Edit login screen
+          </a>
           <HintRow title="Dev tools" hint={getDevMenuHint()} />
           <HintRow
             title="Fresh start"
