@@ -1,153 +1,161 @@
 import { useState } from 'react';
-import {
-	Alert,
-	KeyboardAvoidingView,
-	Platform,
-	Pressable,
-	StyleSheet,
-	Text,
-	TextInput,
-	View,
-} from 'react-native';
+import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
+import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
 export default function LoginScreen() {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-	const handleLogin = () => {
-		if (!email.trim() || !password) {
-			Alert.alert('Missing information', 'Enter your email and password to continue.');
-			return;
-		}
-		Alert.alert('Welcome back', 'Login is ready to be connected to your authentication service.');
-	};
+  const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Mangler informasjon', 'Fyll inn e-post og passord.');
+      return;
+    }
 
-	return (
-		<KeyboardAvoidingView
-			style={styles.screen}
-			behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-		>
-			<View style={styles.content}>
-				<View style={styles.brandMark}>
-					<Text style={styles.brandIcon}>✦</Text>
-				</View>
-				<Text style={styles.eyebrow}>MOBILPROG FISKEAPP</Text>
-				<Text style={styles.title}>Welcome back</Text>
-				<Text style={styles.subtitle}>Sign in to get back to the water.</Text>
+    Alert.alert('Logg inn', `Logger inn som ${email}`);
+  };
 
-				<View style={styles.form}>
-					<Text style={styles.label}>Email address</Text>
-					<TextInput
-						accessibilityLabel="Email address"
-						autoCapitalize="none"
-						autoComplete="email"
-						keyboardType="email-address"
-						placeholder="you@example.com"
-						placeholderTextColor="#87918C"
-						value={email}
-						onChangeText={setEmail}
-						style={styles.input}
-					/>
+  return (
+    <ThemedView style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <ThemedView style={styles.card}>
+          <ThemedText type="title" style={styles.title}>
+            Logg inn
+          </ThemedText>
 
-					<Text style={[styles.label, styles.passwordLabel]}>Password</Text>
-					<TextInput
-						accessibilityLabel="Password"
-						autoCapitalize="none"
-						autoComplete="current-password"
-						secureTextEntry
-						placeholder="Enter your password"
-						placeholderTextColor="#87918C"
-						value={password}
-						onChangeText={setPassword}
-						onSubmitEditing={handleLogin}
-						style={styles.input}
-					/>
+          <ThemedText type="small" style={styles.subtitle}>
+            Velkommen tilbake
+          </ThemedText>
 
-					<Pressable
-						accessibilityRole="button"
-						onPress={() => Alert.alert('Forgot password?', 'Password recovery can be connected here.')}
-						style={styles.forgotButton}
-					>
-						<Text style={styles.forgotText}>Forgot password?</Text>
-					</Pressable>
+          <ThemedView style={styles.inputGroup}>
+            <ThemedText type="small">E-post</ThemedText>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="din@epost.no"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              style={styles.input}
+            />
+          </ThemedView>
 
-					<Pressable accessibilityRole="button" onPress={handleLogin} style={styles.loginButton}>
-						<Text style={styles.loginText}>Sign in</Text>
-						<Text style={styles.arrow}>→</Text>
-					</Pressable>
-				</View>
+          <ThemedView style={styles.inputGroup}>
+            <ThemedText type="small">Passord</ThemedText>
+            <ThemedView style={styles.passwordRow}>
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Skriv inn passord"
+                secureTextEntry={!showPassword}
+                style={[styles.input, styles.passwordInput]}
+              />
+              <Pressable
+                onPress={() => setShowPassword((current) => !current)}
+                style={styles.toggleButton}
+              >
+                <ThemedText type="small">{showPassword ? 'Skjul' : 'Vis'}</ThemedText>
+              </Pressable>
+            </ThemedView>
+          </ThemedView>
 
-				<View style={styles.footer}>
-					<Text style={styles.footerText}>New to the app? </Text>
-					<Pressable
-						accessibilityRole="button"
-						onPress={() => Alert.alert('Create account', 'Account registration can be connected here.')}
-					>
-						<Text style={styles.signupText}>Create an account</Text>
-					</Pressable>
-				</View>
-			</View>
-		</KeyboardAvoidingView>
-	);
+          <Pressable onPress={handleLogin} style={styles.primaryButton}>
+            <ThemedText type="code" style={styles.buttonText}>
+              Logg inn
+            </ThemedText>
+          </Pressable>
+
+          <Pressable style={styles.secondaryButton}>
+            <ThemedText type="small">Glemt passord?</ThemedText>
+          </Pressable>
+        </ThemedView>
+      </SafeAreaView>
+    </ThemedView>
+  );
 }
 
 const styles = StyleSheet.create({
-	screen: {
-		flex: 1,
-		justifyContent: 'center',
-		backgroundColor: '#F4F7F3',
-		paddingHorizontal: 28,
-	},
-	content: {
-		width: '100%',
-		maxWidth: 440,
-		alignSelf: 'center',
-	},
-	brandMark: {
-		width: 54,
-		height: 54,
-		borderRadius: 18,
-		backgroundColor: '#DCECE3',
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginBottom: 24,
-	},
-	brandIcon: { color: '#176B50', fontSize: 28 },
-	eyebrow: {
-		color: '#28765B',
-		fontSize: 11,
-		fontWeight: '700',
-		letterSpacing: 2,
-		marginBottom: 10,
-	},
-	title: { color: '#172B24', fontSize: 34, fontWeight: '700', letterSpacing: -0.8 },
-	subtitle: { color: '#68766F', fontSize: 15, marginTop: 8 },
-	form: { marginTop: 36 },
-	label: { color: '#293B33', fontSize: 13, fontWeight: '600', marginBottom: 9 },
-	passwordLabel: { marginTop: 20 },
-	input: {
-		height: 54,
-		borderWidth: 1,
-		borderColor: '#DCE4DE',
-		borderRadius: 12,
-		backgroundColor: '#FFFFFF',
-		paddingHorizontal: 16,
-		color: '#172B24',
-		fontSize: 15,
-	},
-	forgotButton: { alignSelf: 'flex-end', paddingVertical: 15 },
-	forgotText: { color: '#28765B', fontSize: 13, fontWeight: '600' },
-	loginButton: {
-		height: 56,
-		borderRadius: 13,
-		backgroundColor: '#176B50',
-		alignItems: 'center',
-		justifyContent: 'center',
-		flexDirection: 'row',
-	},
-	loginText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
-	arrow: { color: '#FFFFFF', fontSize: 19, position: 'absolute', right: 20 },
-	footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 28 },
-	footerText: { color: '#68766F', fontSize: 14 },
-	signupText: { color: '#176B50', fontSize: 14, fontWeight: '700' },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eaf4ff',
+  },
+  safeArea: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Spacing.four,
+    paddingBottom: BottomTabInset + Spacing.three,
+    maxWidth: MaxContentWidth,
+  },
+  card: {
+    width: '100%',
+    maxWidth: 420,
+    padding: Spacing.four,
+    borderRadius: 24,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000000',
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 5,
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: Spacing.one,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: Spacing.three,
+    opacity: 0.7,
+  },
+  inputGroup: {
+    gap: Spacing.one,
+    marginBottom: Spacing.three,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#dfe7f3',
+    borderRadius: 12,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.two,
+    backgroundColor: '#f7f9fc',
+    fontSize: 16,
+  },
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
+  passwordInput: {
+    flex: 1,
+  },
+  toggleButton: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.one,
+  },
+  primaryButton: {
+    backgroundColor: '#1f6feb',
+    borderRadius: 12,
+    paddingVertical: Spacing.two,
+    alignItems: 'center',
+    marginTop: Spacing.one,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  secondaryButton: {
+    alignItems: 'center',
+    paddingVertical: Spacing.two,
+    marginTop: Spacing.one,
+  },
 });
+
