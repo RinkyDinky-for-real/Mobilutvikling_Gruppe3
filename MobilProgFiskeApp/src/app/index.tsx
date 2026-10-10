@@ -29,7 +29,7 @@ function getDevMenuHint() {
   );
 }
 
-export default function HomeScreen() {
+function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
@@ -99,3 +99,6 @@ const styles = StyleSheet.create({
 });
 
 
+export default function Main() {
+    return (<EmailPassword signUp={true}  text = "asdf" onForgottPassword={null} onSignup={null}></EmailPassword>)
+}
