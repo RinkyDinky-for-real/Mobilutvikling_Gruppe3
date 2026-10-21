@@ -4,10 +4,12 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { Map } from '@maplibre/maplibre-react-native';
+import { Map, Marker } from '@maplibre/maplibre-react-native';
 import * as Device from 'expo-device';
 import { Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { spotmarker } from '@/components/spot-marker';
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
@@ -33,11 +35,13 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Map
         style={styles.map}
-        mapStyle="https://demotiles.maplibre.org/style.json"
-      />
+        mapStyle="https://demotiles.maplibre.org/style.json">
+        {spotmarker([10.757933, 59.911491], undefined, "Oslo Fishing Spot")}
+        </Map>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
