@@ -33,11 +33,14 @@ export default function LoginScreen() {
           </ThemedText>
 
           <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small">E-post</ThemedText>
+            <ThemedText type="small" style={styles.inputLabel}>
+              E-post
+            </ThemedText>
             <TextInput
               value={email}
               onChangeText={setEmail}
               placeholder="din@epost.no"
+              placeholderTextColor="#6b7280"
               autoCapitalize="none"
               keyboardType="email-address"
               style={styles.input}
@@ -45,12 +48,15 @@ export default function LoginScreen() {
           </ThemedView>
 
           <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small">Passord</ThemedText>
+            <ThemedText type="small" style={styles.inputLabel}>
+              Passord
+            </ThemedText>
             <ThemedView style={styles.passwordRow}>
               <TextInput
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Skriv inn passord"
+                placeholderTextColor="#6b7280"
                 secureTextEntry={!showPassword}
                 style={[styles.input, styles.passwordInput]}
               />
@@ -58,7 +64,9 @@ export default function LoginScreen() {
                 onPress={() => setShowPassword((current) => !current)}
                 style={styles.toggleButton}
               >
-                <ThemedText type="small">{showPassword ? 'Skjul' : 'Vis'}</ThemedText>
+                <ThemedText type="small" style={styles.inputLabel}>
+                  {showPassword ? 'Skjul' : 'Vis'}
+                </ThemedText>
               </Pressable>
             </ThemedView>
           </ThemedView>
@@ -100,10 +108,7 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     borderRadius: 24,
     backgroundColor: '#ffffff',
-    shadowColor: '#000000',
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
+    boxShadow: '0px 8px 14px rgba(0, 0, 0, 0.08)',
     elevation: 5,
   },
   title: {
@@ -118,20 +123,26 @@ const styles = StyleSheet.create({
   inputGroup: {
     gap: Spacing.one,
     marginBottom: Spacing.three,
+    backgroundColor: '#ffffff',
+  },
+  inputLabel: {
+    color: '#111827',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#dfe7f3',
+    borderColor: '#b8c7dc',
     borderRadius: 12,
     paddingHorizontal: Spacing.two,
     paddingVertical: Spacing.two,
-    backgroundColor: '#f7f9fc',
+    backgroundColor: '#ffffff',
+    color: '#111827',
     fontSize: 16,
   },
   passwordRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.one,
+    backgroundColor: '#ffffff',
   },
   passwordInput: {
     flex: 1,
@@ -153,6 +164,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   secondaryButton: {
+    backgroundColor: '#2e1ec0',
+    borderRadius: 12,
+    paddingHorizontal: Spacing.four,
     alignItems: 'center',
     paddingVertical: Spacing.two,
     marginTop: Spacing.one,
