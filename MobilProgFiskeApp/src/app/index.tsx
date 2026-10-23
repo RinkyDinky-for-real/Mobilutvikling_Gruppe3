@@ -44,7 +44,7 @@ export default function HomeScreen() {
         mapStyle="https://demotiles.maplibre.org/style.json"
         >
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
-          {spotmarker([10.757933, 59.911491], undefined, "Oslo Fishing Spot")}
+          {spotmarker("1", [10.757933, 59.911491], undefined, "Oslo Fishing Spot")}
       </Map>
     </View>
 
