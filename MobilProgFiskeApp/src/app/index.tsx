@@ -4,12 +4,13 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { Map, Marker } from '@maplibre/maplibre-react-native';
+import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
 import * as Device from 'expo-device';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { spotmarker } from '@/components/spot-marker';
+import { useEffect } from 'react';
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
@@ -33,15 +34,22 @@ function getDevMenuHint() {
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
+      <ThemedView type="text" style={{ marginTop: 20, marginBottom: 20, padding: 10, borderRadius: 10, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' }}>
+        <ThemedText type="title" style={{ textAlign: 'center' }}>
+          Fishing App
+        </ThemedText>
+      </ThemedView>
       <Map
         style={styles.map}
-        mapStyle="https://demotiles.maplibre.org/style.json">
-        {spotmarker([10.757933, 59.911491], undefined, "Oslo Fishing Spot")}
-        </Map>
+        mapStyle="https://demotiles.maplibre.org/style.json"
+        >
+          <Camera zoom={1} minZoom={1} maxZoom={20}/>
+          {spotmarker([10.757933, 59.911491], undefined, "Oslo Fishing Spot")}
+      </Map>
     </View>
+
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

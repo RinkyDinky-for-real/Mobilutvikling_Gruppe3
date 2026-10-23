@@ -3,7 +3,7 @@
     "name": "MobilProgFiskeApp",
     "slug": "MobilProgFiskeApp",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "mobilprogfiskeapp",
     "userInterfaceStyle": "automatic",
@@ -36,7 +36,8 @@
       ],
       "@maplibre/maplibre-react-native",
       "expo-image",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
