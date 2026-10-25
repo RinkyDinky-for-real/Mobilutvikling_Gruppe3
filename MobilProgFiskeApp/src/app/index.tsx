@@ -49,7 +49,7 @@ const spots: Spot[] = [
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <ThemedView type="text" style={{ marginTop: 20, marginBottom: 20, padding: 10, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+      <ThemedView type="text" style={{ marginTop: 20, marginBottom: 20, padding: 10, borderRadius: 10, backgroundColor: '#f2f2f2', alignItems: 'center', justifyContent: 'center' }}>
         <ThemedText type="title" style={{ textAlign: 'center' }}>
           Fishing App
         </ThemedText>

@@ -16,7 +16,7 @@ function handleMarkerPress(event: NativeSyntheticEvent<PressEvent>, markerId: st
 export function spotmarker(markerid: string, longlat: [number, number]= [0, 0], photolink: ImageSourcePropType = defaultPhoto, pointName: string = "Fishing Spot", RedirectLink: "/explore" | '/') {
   return (
     <Marker id={markerid} lngLat={[longlat[0], longlat[1]]} onPress={(event) => handleMarkerPress(event, markerid, RedirectLink)} anchor="bottom" style={{ alignSelf: 'flex-start', backgroundColor: 'white', borderRadius: 25, padding: 5 }}>
-      <ThemedView lightColor="#ffffff" darkColor="#000000" style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
+      <ThemedView lightColor="#f2f2f2" darkColor="#000000" style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
         <Image source={photolink} style={{ width: 30, height: 30 }} />
         <ThemedText type="small" style={{ textAlign: 'center' }}>
           {pointName}
