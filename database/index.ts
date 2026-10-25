@@ -1,5 +1,5 @@
 import { request } from "http";
-// The database can be accessed on the following URL: https://mobile-programming.emilhesmyr.workers.dev
+// The database can be accessed on the following URL: 
 export default {
 	async fetch(request: Request, env) {
 		const { pathname } = new URL(request.url);
@@ -12,6 +12,17 @@ export default {
 		let potentialError = 200
 		let shouldSend = false
 		const userId = request.headers.get("userId")
+		if (pathname === "/api/v1/user/getuserid" && request.headers.get("userName") && request.headers.get("passwordHash")) {
+			
+			const { results } = await env.mobile_programming.prepare("select AccountId from Accounts where UserName = ? and PasswordHash = ?").bind(request.headers.get("userName"), request.headers.get("passwordHash")).run()
+			if (results.length == 0) {
+				return (new Response("User not found", { "status": 404 }))
+			}
+			else {
+				return(Response.json(results))
+			}
+		}
+		
 		if (!(userId || request.method === "POST" || pathname === "/api/v1/post" && request.method === "DELETE")) {
 			return (new Response("UserId missing", {"status": 400}))
 		}
