@@ -6,11 +6,45 @@ import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
 import * as Device from 'expo-device';
-import { Dimensions, Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, ImageSourcePropType, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { spotmarker } from '@/components/spot-marker';
 import { useEffect } from 'react';
+import { FlatList } from 'react-native';
+import React from 'react';
+
+type Spot = {
+  id: string;
+  longlat: [number, number];
+  photolink: ImageSourcePropType;
+  pointName: string;
+  RedirectLink: "/explore" | '/';
+};
+
+const spots: Spot[] = [
+  {
+    id: '1',
+    longlat: [10.7522, 59.9139],
+    photolink: require('../../assets/images/photo1.jpg'),
+    pointName: 'Fishing Spot 1',
+    RedirectLink: '/explore',
+  },
+  {
+    id: '2',
+    longlat: [5.325919, 60.394306],
+    photolink: require('../../assets/images/photo1.jpg'),
+    pointName: 'Fishing Spot 2',
+    RedirectLink: '/explore',
+  },
+  {
+    id: '3',
+    longlat: [7.325919, 61.394306],
+    photolink: require('../../assets/images/photo1.jpg'),
+    pointName: 'Fishing Spot 3',
+    RedirectLink: '/explore',
+  },
+];
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
@@ -44,7 +78,11 @@ export default function HomeScreen() {
         mapStyle="https://demotiles.maplibre.org/style.json"
         >
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
-          {spotmarker("1", [10.757933, 59.911491], undefined, "Oslo Fishing Spot")}
+          {spots.map((spot) => (
+          <React.Fragment key={spot.id}>
+            {spotmarker(spot.id, spot.longlat, spot.photolink, spot.pointName, spot.RedirectLink)}
+          </React.Fragment>
+          ))}
       </Map>
     </View>
 
