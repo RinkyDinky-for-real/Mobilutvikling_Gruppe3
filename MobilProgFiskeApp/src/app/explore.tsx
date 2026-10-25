@@ -43,7 +43,7 @@ export default function TabTwoScreen() {
           <ThemedText style={styles.centerText} themeColor="textSecondary">
             Her er den komponenten.
           </ThemedText>
-          <SmallMapCard longlat={[11.40416, 47.26475]} zoom={1}/>
+          <SmallMapCard longlat={[11.40416, 47.26475]} zoom={10}/>
 
         </ThemedView>
       </ThemedView>

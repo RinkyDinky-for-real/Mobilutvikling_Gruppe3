@@ -13,11 +13,20 @@ export function SmallMapCard({ longlat = [0, 0],zoom = 1,}: SmallMapCardProps){
   
     return (
     <View style={styles.container}>  
-        <Map logo={false} attribution={false} style={styles.map} 
+        <Map logo={false} 
+        attribution={false} 
+        style={styles.map}
+        dragPan={false}
+        touchZoom={false}
+        doubleTapZoom={false}
+        touchRotate={false}
+        touchPitch={false}
         mapStyle={"https://tiles.openfreemap.org/styles/liberty"}>
             <Camera
                 maxBounds={[longlat[0], longlat[1], longlat[0], longlat[1]]}
                 zoom={zoom}
+                maxZoom={zoom}
+                minZoom={zoom}
             />
         </Map>
     </View>
@@ -27,8 +36,8 @@ export function SmallMapCard({ longlat = [0, 0],zoom = 1,}: SmallMapCardProps){
 const styles = {
     container: {
         //edit disse for å forandre størrelsen på kartet
-        width: 150,
-        height: 100,
+        width: 350,
+        height: 200,
     },
     map: {
       flex: 1,
