@@ -34,10 +34,6 @@ export default function TabTwoScreen() {
   });
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.titleContainer}>
           <ThemedText style={styles.centerText} themeColor="textSecondary">
@@ -47,7 +43,6 @@ export default function TabTwoScreen() {
 
         </ThemedView>
       </ThemedView>
-    </ScrollView>
   );
 }
 

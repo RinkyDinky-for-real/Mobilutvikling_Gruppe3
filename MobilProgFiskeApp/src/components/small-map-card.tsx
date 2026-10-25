@@ -23,7 +23,7 @@ export function SmallMapCard({ longlat = [0, 0],zoom = 1,}: SmallMapCardProps){
         touchPitch={false}
         mapStyle={"https://tiles.openfreemap.org/styles/liberty"}>
             <Camera
-                maxBounds={[longlat[0], longlat[1], longlat[0], longlat[1]]}
+                center={[longlat[0], longlat[1]]}
                 zoom={zoom}
                 maxZoom={zoom}
                 minZoom={zoom}
