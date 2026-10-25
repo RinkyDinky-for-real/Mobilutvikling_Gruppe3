@@ -26,6 +26,7 @@ export function SmallMapCard({ longlat = [0, 0],zoom = 1,}: SmallMapCardProps){
 
 const styles = {
     container: {
+        //edit disse for å forandre størrelsen på kartet
         width: 150,
         height: 100,
     },
