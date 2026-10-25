@@ -75,7 +75,7 @@ export default function HomeScreen() {
       </ThemedView>
       <Map
         style={styles.map}
-        mapStyle="https://demotiles.maplibre.org/style.json"
+        mapStyle="https://tiles.openfreemap.org/styles/liberty"
         >
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
           {spots.map((spot) => (
