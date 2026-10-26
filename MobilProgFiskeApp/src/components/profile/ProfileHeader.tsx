@@ -1,5 +1,4 @@
 import { View, Text, Image,ImageBackground, StyleSheet } from 'react-native';
-import { Fish, MapPin, UserGroup } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '@/styles/global';
 
@@ -16,9 +15,6 @@ export default function ProfileHeader({
   username,
   profilePicture,
   backgroundImage,
-  followersCount,
-  catches,
-  spots
 }: ProfileHeaderProps) {
   return (
     <View style={styles.container}>

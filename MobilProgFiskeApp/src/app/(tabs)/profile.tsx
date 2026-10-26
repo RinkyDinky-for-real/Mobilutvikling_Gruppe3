@@ -3,6 +3,7 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import { colors } from '@/styles/global';
 import ProfileStats from "@/components/profile/ProfileStats";
+import ProfileInfo from "@/components/profile/ProfileInfo";
 
 export default function ProfileScreen() {
   return (
@@ -20,6 +21,11 @@ export default function ProfileScreen() {
           followersCount={100}
           catches={50}
           spots={25}
+        />
+        <ProfileInfo
+          favoriteFish="Salmon"
+          favoriteSpot="Lake Superior"
+          fishingStyle="Spin Fishing"
         />
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.title}>Profile</Text>
