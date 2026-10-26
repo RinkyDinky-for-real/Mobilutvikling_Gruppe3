@@ -17,19 +17,19 @@ export default function ProfileStats({
   return (
     <View style={styles.statsContainer}>
         <View style={styles.statItem}>
-          <UserGroup size={20} />
+          <UserGroup color={colors.iconBlue} size={20} />
           <Text style={styles.statText}>{followersCount}</Text>
           <Text style={styles.statLabel}>Followers</Text>
         </View>
 
         <View style={styles.statItem}>
-          <MapPin size={20} />
+          <MapPin color={colors.iconTeal} size={20} />
           <Text style={styles.statText}>{spots}</Text>
           <Text style={styles.statLabel}>Spots</Text>
         </View>
 
         <View style={styles.statItem}>
-          <Fish size={20} />
+          <Fish color={colors.iconBlue} size={20} />
           <Text style={styles.statText}>{catches}</Text>
           <Text style={styles.statLabel}>Catches</Text>
         </View>
@@ -58,5 +58,6 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 14,
+    color: colors.textSecondary,
   },
 });

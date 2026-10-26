@@ -17,7 +17,7 @@ export default function ProfileInfo({
     <View style={styles.infoContainer}>
       <View style={styles.infoItem}>
 
-        <Fish size={30} />
+        <Fish color={colors.iconBlue} size={30} />
         <View style={styles.infoItemTextContainer}>
           <Text style={styles.infoLabel}>Favorite Fish</Text>
           <Text style={styles.infoText}>{favoriteFish}</Text>
@@ -25,7 +25,7 @@ export default function ProfileInfo({
       </View>
       <View style={styles.infoItem}>
 
-        <MapPin size={30} />
+        <MapPin color={colors.iconTeal} size={30} />
         <View style={styles.infoItemTextContainer}>
           <Text style={styles.infoLabel}>Favorite Spot</Text>
           <Text style={styles.infoText}>{favoriteSpot}</Text>
@@ -33,7 +33,7 @@ export default function ProfileInfo({
       </View>
       <View style={styles.infoItem}>
 
-        <FishingHook size={30} />
+        <FishingHook color={colors.iconBlue} size={30} />
         <View style={styles.infoItemTextContainer}>
           <Text style={styles.infoLabel}>Fishing Style</Text>
           <Text style={styles.infoText}>{fishingStyle}</Text>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
+    color: colors.textSecondary,
   },
   infoItemTextContainer: {
     marginHorizontal: 10,

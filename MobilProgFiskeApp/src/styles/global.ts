@@ -6,11 +6,13 @@ export const colors = {
   surface: '#98C1D9',
   primary: '#E0FBFC',
   text: '#ffffff',
-  textSecondary: '#a0a0b0',
+  textSecondary: '#757575',
   alert: '#ff5252',
   darkBackground: '#293241',
   darkSurface: '#3D5A80',
   highlight: '#EE6C4D',
+  iconTeal: '#16B3AA',
+  iconBlue: '#288CF7',
 };
 
 export const globalStyles = StyleSheet.create({
