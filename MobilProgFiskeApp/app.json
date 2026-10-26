@@ -37,6 +37,12 @@
       "@maplibre/maplibre-react-native",
       "expo-image",
       "expo-web-browser",
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "ALL"
+        }
+      ],
       "expo-status-bar"
     ],
     "experiments": {
