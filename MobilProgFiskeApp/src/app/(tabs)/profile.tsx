@@ -4,6 +4,8 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import { colors } from '@/styles/global';
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileInfo from "@/components/profile/ProfileInfo";
+import CatchCard from "@/components/profile/CatchCard";
+import RecentCatches from "@/components/profile/RecentCatches";
 
 export default function ProfileScreen() {
   return (
@@ -28,8 +30,7 @@ export default function ProfileScreen() {
           fishingStyle="Spin Fishing"
         />
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Text style={styles.title}>Profile</Text>
-          <Text style={styles.title}>This is the user profile screen.</Text>
+          <RecentCatches />
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>

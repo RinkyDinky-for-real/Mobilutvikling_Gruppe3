@@ -41,7 +41,7 @@ export default function ProfileStats({
 const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     backgroundColor: colors.primary,
     borderRadius: 10,
     padding: 10,
