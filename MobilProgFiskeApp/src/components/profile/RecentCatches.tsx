@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '@/styles/global';
+import { colors, globalStyles } from '@/styles/global';
 import CatchCard from './CatchCard';
 
 export default function RecentCatches() {
@@ -67,8 +67,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-  },
-  card: {
-    marginBottom: 10,
   },
 });

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Fish, MapPin, FishingHook, SquarePen } from 'lucide-react-native';
-import { colors } from '@/styles/global';
+import { colors, globalStyles } from '@/styles/global';
 
 type ProfileInfoProps = {
   favoriteFish: string;
@@ -14,7 +14,7 @@ export default function ProfileInfo({
   fishingStyle,
 }: ProfileInfoProps) {
   return (
-    <View style={styles.infoContainer}>
+    <View style={[styles.infoContainer, globalStyles.shadow]}>
       <View style={styles.infoItem}>
 
         <Fish color={colors.iconBlue} size={30} />
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 10,
     padding: 10,
-    borderWidth: 2,
     margin: 10,
   },
   infoItem: {

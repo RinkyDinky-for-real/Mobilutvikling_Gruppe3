@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Fish, MapPin, UserGroup } from 'lucide-react-native';
-import { colors } from '@/styles/global';
+import { colors, globalStyles } from '@/styles/global';
 
 
 type ProfileStatsProps = {
@@ -15,7 +15,7 @@ export default function ProfileStats({
   spots
 }: ProfileStatsProps) {
   return (
-    <View style={styles.statsContainer}>
+    <View style={[styles.statsContainer, globalStyles.shadow]}>
         <View style={styles.statItem}>
           <UserGroup color={colors.iconBlue} size={20} />
           <Text style={styles.statText}>{followersCount}</Text>
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 10,
     padding: 10,
-    borderWidth: 2,
     marginHorizontal: 10,
   },
   statItem: {

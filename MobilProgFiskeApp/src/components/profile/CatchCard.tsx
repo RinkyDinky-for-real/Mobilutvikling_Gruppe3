@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { colors } from '@/styles/global';
+import { colors, globalStyles } from '@/styles/global';
 
 
 type CatchCardProps = {
@@ -19,7 +19,7 @@ export default function CatchCard({
 }: CatchCardProps) {
     return (
         <View style={styles.card}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
+            <Image source={{ uri: imageUrl }} style={[styles.image, globalStyles.shadow]} />
             <View style={styles.infoContainer}>
                 <Text style={styles.species}>{species}</Text>
                 <View style={styles.textContainer}>
@@ -34,7 +34,6 @@ export default function CatchCard({
 const styles = StyleSheet.create({
     card: {
         width: 150,
-        //borderRadius: 10,
         overflow: 'hidden',
     },
     image: {
