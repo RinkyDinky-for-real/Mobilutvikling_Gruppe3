@@ -15,7 +15,6 @@ const posts = [
   { id: '1', name: 'Alex Fisher', time: '12 min ago' },
   { id: '2', name: 'Sam River', time: '1 hour ago' },
   { id: '3', name: 'Jamie Lake', time: '3 hours ago' },
-  { id: '4', name: 'Isak Icecock', time: '5 hours ago' },
 ];
 
 export default function FeedScreen() {
@@ -101,7 +100,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   post: {
-    backgroundColor: '#5f5f5f',
     padding: Spacing.three,
     borderRadius: 18,
     gap: Spacing.three,
