@@ -4,20 +4,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const router = useRouter();
+
   const handleLogin = () => {
     if (!email || !password) {
       Alert.alert('Mangler informasjon', 'Fyll inn e-post og passord.');
       return;
-    }
-
-    const testRoute = () => {
-      
     }
 
     Alert.alert('Logg inn', `Logger inn som ${email}`);
@@ -74,7 +73,7 @@ export default function LoginScreen() {
             </ThemedView>
           </ThemedView>
 
-          <Pressable onPress={handleLogin} style={styles.primaryButton}>
+          <Pressable onPress={ () => router.navigate('/(tabs)/profile')} style={styles.primaryButton}>
             <ThemedText type="code" style={styles.buttonText}>
               Logg inn
             </ThemedText>
