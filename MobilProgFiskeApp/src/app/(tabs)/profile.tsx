@@ -4,7 +4,6 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import { colors } from '@/styles/global';
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileInfo from "@/components/profile/ProfileInfo";
-import CatchCard from "@/components/profile/CatchCard";
 import RecentCatches from "@/components/profile/RecentCatches";
 
 export default function ProfileScreen() {

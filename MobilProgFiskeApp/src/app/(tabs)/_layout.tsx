@@ -27,7 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name='placeholder2'
         options={{
-          title: 'Post',
+          title: 'Feed',
           tabBarIcon: ({ color, size }) => (
             <CirclePlus size={size} color={color} />
           ),
