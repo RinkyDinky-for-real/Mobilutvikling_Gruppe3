@@ -11,30 +11,30 @@ type Spot = {
   longlat: [number, number];
   photolink: ImageSourcePropType;
   pointName: string;
-  RedirectLink: "/explore" | '/';
+  RedirectLink: "/feed" | '/';
 };
 
 const spots: Spot[] = [
   {
     id: '1',
     longlat: [10.7522, 59.9139],
-    photolink: require('../../assets/images/photo1.jpg'),
+    photolink: require('../../../assets/images/photo1.jpg'),
     pointName: 'Fishing Spot 1',
-    RedirectLink: '/explore',
+    RedirectLink: '/feed',
   },
   {
     id: '2',
     longlat: [5.325919, 60.394306],
-    photolink: require('../../assets/images/photo1.jpg'),
+    photolink: require('../../../assets/images/photo1.jpg'),
     pointName: 'Fishing Spot 2',
-    RedirectLink: '/explore',
+    RedirectLink: '/feed',
   },
   {
     id: '3',
     longlat: [7.325919, 61.394306],
-    photolink: require('../../assets/images/photo1.jpg'),
+    photolink: require('../../../assets/images/photo1.jpg'),
     pointName: 'Fishing Spot 3',
-    RedirectLink: '/explore',
+    RedirectLink: '/feed',
   },
 ];
 

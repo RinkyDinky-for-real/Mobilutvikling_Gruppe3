@@ -16,6 +16,10 @@ export default function LoginScreen() {
       return;
     }
 
+    const testRoute = () => {
+      
+    }
+
     Alert.alert('Logg inn', `Logger inn som ${email}`);
   };
 
