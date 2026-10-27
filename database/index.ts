@@ -1,5 +1,5 @@
 import { request } from "http";
-// The database can be accessed on the following URL: 
+// The database can be accessed on the following URL: https://mobile-programming.emilhesmyr.workers.dev/path/to/endpoint.
 export default {
 	async fetch(request: Request, env) {
 		const { pathname } = new URL(request.url);
@@ -38,10 +38,13 @@ export default {
 			query = "SELECT * from Posts where userId = ?"
 			value = userId
 		}
-		else if (pathname === "/api/v1/post/random" && request.method === "GET") {
+		else if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
-			query = "select * from Posts where UserId != ? order by random() limit 1"
+			
+			query = "select * from Posts where UserId != ? order by random() limit ?"
 			value = userId
+			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
+			return(Response.json(results))
 		}
 		else if (pathname == "/api/v1/user" && request.method == "POST") {
 			if (!(request.headers.get("userName") && request.headers.get("passwordHash"))) {
