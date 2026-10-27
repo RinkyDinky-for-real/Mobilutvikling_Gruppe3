@@ -1,7 +1,7 @@
 import { Map, Marker, PressEvent } from "@maplibre/maplibre-react-native";
-import { ThemedView } from "./themed-view";
+import { ThemedView } from "../themed-view";
 import { Image, Pressable, StyleSheet, View, type ImageSourcePropType } from 'react-native';
-import { ThemedText } from "./themed-text";
+import { ThemedText } from "../themed-text";
 import type { NativeSyntheticEvent } from 'react-native';
 import { router } from "expo-router";
 

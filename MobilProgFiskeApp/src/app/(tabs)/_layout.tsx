@@ -16,7 +16,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name='placeholder'
+        name='mapPage'
         options={{
           title: 'Fishing Spots',
           tabBarIcon: ({ color, size }) => (
@@ -25,7 +25,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name='placeholder2'
+        name='feed'
         options={{
           title: 'Feed',
           tabBarIcon: ({ color, size }) => (

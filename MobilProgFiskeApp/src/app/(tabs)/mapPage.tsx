@@ -1,17 +1,9 @@
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
-import * as Device from 'expo-device';
-import { Dimensions, ImageSourcePropType, Platform, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { spotmarker } from '@/components/spot-marker';
-import { useEffect } from 'react';
-import { FlatList } from 'react-native';
+import { Camera, Map } from '@maplibre/maplibre-react-native';
+import { ImageSourcePropType, StyleSheet, View } from 'react-native';
+
+import { spotmarker } from '@/components/mapComponents/spot-marker';
 import React from 'react';
 
 type Spot = {
