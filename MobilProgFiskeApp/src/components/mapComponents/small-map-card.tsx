@@ -5,6 +5,7 @@ import { View } from "react-native";
 import React from 'react';
 
 type SmallMapCardProps = {
+    
   longlat?: [number, number];
   zoom?: number;
 };

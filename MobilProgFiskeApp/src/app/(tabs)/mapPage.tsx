@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { ImageSourcePropType, StyleSheet, View } from 'react-native';
-
+import {createMarkersFromUserPost} from '@/hooks/create-Marker';
 import { spotmarker } from '@/components/mapComponents/spot-marker';
 import React from 'react';
 
@@ -14,31 +14,13 @@ type Spot = {
   RedirectLink: "/feed" | '/';
 };
 
-const spots: Spot[] = [
-  {
-    id: '1',
-    longlat: [10.7522, 59.9139],
-    photolink: require('../../../assets/images/photo1.jpg'),
-    pointName: 'Fishing Spot 1',
-    RedirectLink: '/feed',
-  },
-  {
-    id: '2',
-    longlat: [5.325919, 60.394306],
-    photolink: require('../../../assets/images/photo1.jpg'),
-    pointName: 'Fishing Spot 2',
-    RedirectLink: '/feed',
-  },
-  {
-    id: '3',
-    longlat: [7.325919, 61.394306],
-    photolink: require('../../../assets/images/photo1.jpg'),
-    pointName: 'Fishing Spot 3',
-    RedirectLink: '/feed',
-  },
-];
+const spots: Spot[] = [];
 
 export default function HomeScreen() {
+  
+  const userId = "user1";
+  spots.push(...createMarkersFromUserPost(userId));
+  
   return (
     <View style={styles.container}>
       <Map
