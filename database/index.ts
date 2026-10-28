@@ -30,7 +30,12 @@ export default {
 				return(Response.json(results))
 			}
 		}
-		
+		if (pathname === "/api/v1/user" && request.method === "PATCH" && request.headers.get("userId") && request.headers.get("userName") && request.headers.get("passwordHash")) {
+			await env.mobile_programming.prepare("update Accounts set UserName =  ? where AccountId = ? limit 1").bind(request.headers.get("userName"), request.headers.get("userId")).run()
+			await env.mobile_programming.prepare("update Accounts set PasswordHash = ? where AccountId = ? limit 1").bind(request.headers.get("passwordHash"), request.headers.get("userId")).run()
+			return (new Response("User updated", { "status": 202 }))
+		}
+
 		if (!(userId || request.method === "POST" || pathname === "/api/v1/post" && request.method === "DELETE")) {
 			return (new Response("UserId missing", {"status": 400}))
 		}
