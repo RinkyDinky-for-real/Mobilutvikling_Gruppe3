@@ -1,21 +1,22 @@
 import { useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from 'react-native';
+import {Pressable,ScrollView,StyleSheet,Text,View,useColorScheme,} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { SmallMapCard } from '@/components/mapComponents/small-map-card';
+
+type FeedPost = {
+  id: string;
+  name: string;
+  time: string;
+  longlat: [number, number];
+};
 
 const posts = [
-  { id: '1', name: 'Alex Fisher', time: '12 min ago' },
-  { id: '2', name: 'Sam River', time: '1 hour ago' },
-  { id: '3', name: 'Jamie Lake', time: '3 hours ago' },
-];
+  { id: '1', name: 'Alex Fisher', time: '12 min ago', longlat: [10.757933, 59.911491] },
+  { id: '2', name: 'Sam River', time: '1 hour ago', longlat: [5.325919, 59.913991] },
+  { id: '3', name: 'Jamie Lake', time: '3 hours ago', longlat: [15.757933, 79.912491] },
+] satisfies FeedPost[];
 
 export default function FeedScreen() {
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
@@ -53,12 +54,7 @@ export default function FeedScreen() {
                   </View>
                 </View>
 
-                <View
-                  style={[
-                    styles.imagePlaceholder,
-                    { backgroundColor: isDark ? '#292B2D' : '#F0F0F3' },
-                  ]}
-                />
+                <SmallMapCard longlat={post.longlat} />
 
                 <View style={styles.actions}>
                   <Pressable
@@ -125,11 +121,6 @@ const styles = StyleSheet.create({
   menu: {
     fontSize: 22,
     fontWeight: '700',
-  },
-  imagePlaceholder: {
-    width: '100%',
-    aspectRatio: 1.2,
-    borderRadius: 12,
   },
   actions: {
     flexDirection: 'row',
