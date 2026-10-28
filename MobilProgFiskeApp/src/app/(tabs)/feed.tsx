@@ -8,8 +8,9 @@ import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { router } from 'expo-router'
+import PostCard from '@/components/postComponents/PostCard';
 
 const posts = [
   { id: '1', name: 'Alex Fisher', time: '12 min ago' },
@@ -34,47 +35,7 @@ export default function FeedScreen() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>Feed</Text>
-
-          {posts.map((post) => {
-            const liked = likedPosts.includes(post.id);
-
-            return (
-              <View key={post.id} style={[styles.post, { backgroundColor: cardColor }]}>
-                <View style={styles.postHeader}>
-                  <View style={styles.author}>
-                    <Text style={[styles.text, styles.semiboldText, { color: colors.text }]}>
-                      {post.name}
-                    </Text>
-                    <Text style={[styles.smallText, { color: colors.textSecondary }]}>
-                      {post.time}
-                    </Text>
-                  </View>
-                </View>
-
-                <View
-                  style={[
-                    styles.imagePlaceholder,
-                    { backgroundColor: isDark ? '#292B2D' : '#F0F0F3' },
-                  ]}
-                />
-
-                <View style={styles.actions}>
-                  <Pressable
-                    onPress={() => toggleLike(post.id)}>
-                    <Text style={[styles.text, styles.likeText, liked && styles.liked]}>
-                      {liked ? '♥' : '♡'} {liked ? '1' : '0'}
-                    </Text>
-                  </Pressable>
-                  <Text style={[styles.text, { color: colors.textSecondary }]}>
-                    Comment
-                  </Text>
-                </View>
-              </View>
-            );
-          })}
-        </View>
+        
       </ScrollView>
     </SafeAreaView>
   );
