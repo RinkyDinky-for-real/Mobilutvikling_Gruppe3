@@ -10,7 +10,7 @@ type SmallMapCardProps = {
   zoom?: number;
 };
 
-export function SmallMapCard({ longlat = [0, 0],zoom = 1,}: SmallMapCardProps){
+export function SmallMapCard({ longlat = [0, 0],zoom = 10,}: SmallMapCardProps){
   
     return (
     <View style={styles.container}>  

@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { ImageSourcePropType, StyleSheet, View } from 'react-native';
-import {createMarkersFromUserPost} from '@/hooks/create-Marker';
+import {createMarkersFromUserPost} from '@/hooks/use-Create-Marker';
 import { spotmarker } from '@/components/mapComponents/spot-marker';
 import React from 'react';
 
