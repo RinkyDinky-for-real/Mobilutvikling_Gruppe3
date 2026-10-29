@@ -76,7 +76,9 @@ export default function LoginScreen() {
           </Pressable>
 
           <Pressable onPress={() => router.navigate('/register')} style={styles.secondaryButton}>
-            <ThemedText type="small">Opprett konto</ThemedText>
+            <ThemedText type="small" style={styles.secondaryButtonText}>
+              Opprett konto
+            </ThemedText>
           </Pressable>
         </ThemedView>
       </SafeAreaView>
@@ -171,5 +173,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.two,
     marginTop: Spacing.one,
+  },
+  secondaryButtonText: {
+    color: '#ffffff',
   },
 });

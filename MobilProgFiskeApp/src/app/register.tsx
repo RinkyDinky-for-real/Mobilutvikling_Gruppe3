@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
@@ -25,12 +25,7 @@ export default function RegisterScreen() {
       return;
     }
     setErrors({});
-
-    Alert.alert(
-      'Registreringsskjema klart',
-      'Skjemaet er validert, men konto-oppretting er ikke koblet til en tjeneste ennå.',
-      [{ text: 'Gå til innlogging', onPress: () => router.replace('/') }],
-    );
+    router.replace('/');
   };
 
   return (
