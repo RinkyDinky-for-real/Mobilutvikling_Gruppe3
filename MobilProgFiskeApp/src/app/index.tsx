@@ -79,10 +79,6 @@ export default function LoginScreen() {
             </ThemedText>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton}>
-            <ThemedText type="small">Glemt passord?</ThemedText>
-          </Pressable>
-
           <Pressable onPress={() => router.navigate('/register')} style={styles.secondaryButton}>
             <ThemedText type="small">Opprett konto</ThemedText>
           </Pressable>
