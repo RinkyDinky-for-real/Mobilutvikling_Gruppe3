@@ -61,7 +61,7 @@ export default function FeedScreen() {
                 />
 
                 <View style={styles.actions}>
-                  <Pressable
+                  <Pressable 
                     onPress={() => toggleLike(post.id)}>
                     <Text style={[styles.text, styles.likeText, liked && styles.liked]}>
                       {liked ? '♥' : '♡'} {liked ? '1' : '0'}
