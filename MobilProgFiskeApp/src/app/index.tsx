@@ -30,21 +30,17 @@ export default function LoginScreen() {
             Logg inn
           </ThemedText>
 
-          <ThemedText type="small" style={styles.subtitle}>
-            Velkommen tilbake
-          </ThemedText>
-
           <ThemedView style={styles.inputGroup}>
             <ThemedText type="small" style={styles.inputLabel}>
-              E-post
+              Brukernavn
             </ThemedText>
             <TextInput
               value={email}
               onChangeText={setEmail}
-              placeholder="din@epost.no"
+              placeholder="Ditt brukernavn"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
-              keyboardType="email-address"
+              keyboardType="default"
               style={styles.input}
             />
           </ThemedView>
