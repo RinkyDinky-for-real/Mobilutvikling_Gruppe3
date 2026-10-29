@@ -4,6 +4,7 @@ export default {
 	async fetch(request: Request, env) {
 		
 		const { pathname } = new URL(request.url);
+		
 		//console.log(pathname)
 		//console.log(request.method)
 		//console.log(request.method == "POST" && pathname == "/api/v1/createuser")
@@ -30,9 +31,23 @@ export default {
 				return(Response.json(results))
 			}
 		}
-		if (pathname === "/api/v1/user" && request.method === "PATCH" && request.headers.get("userId") && request.headers.get("userName") && request.headers.get("passwordHash")) {
-			await env.mobile_programming.prepare("update Accounts set UserName =  ? where AccountId = ? limit 1").bind(request.headers.get("userName"), request.headers.get("userId")).run()
-			await env.mobile_programming.prepare("update Accounts set PasswordHash = ? where AccountId = ? limit 1").bind(request.headers.get("passwordHash"), request.headers.get("userId")).run()
+		if (pathname === "/api/v1/user" && request.method === "PATCH" && request.headers.get("userId")) {
+			if (request.headers.get("userName")) {
+				await env.mobile_programming.prepare("update Accounts set UserName =  ? where AccountId = ? limit 1").bind(request.headers.get("userName"), request.headers.get("userId")).run()
+			}
+			if (request.headers.get("passwordHash")) {
+				await env.mobile_programming.prepare("update Accounts set PasswordHash = ? where AccountId = ? limit 1").bind(request.headers.get("passwordHash"), request.headers.get("userId")).run()
+			}
+			if (request.headers.get("favoriteFishingPlace") != null) {
+				await env.mobile_programming.prepare("update Accounts set FavoritePlace = ? where AccountId = ?").bind(request.headers.get("favoriteFishingPlace"), request.headers.get("userId")).run()
+			}
+			if (request.headers.get("favoriteFish") != null) {
+				await env.mobile_programming.prepare("update Accounts set FavoriteFish = ? where AccountId = ?").bind(request.headers.get("favoriteFish"), request.headers.get("userId")).run()
+			}
+			if (request.headers.get("favoriteFishingMethod") != null) {
+				await env.mobile_programming.prepare("update Accounts set FavoriteFishingMethod = ? where AccountId = ?").bind(request.headers.get("favoriteFishingMethod"), request.headers.get("userId")).run()
+			}
+
 			return (new Response("User updated", { "status": 202 }))
 		}
 
@@ -69,7 +84,7 @@ export default {
 			}
 			const newId = String(Math.floor(Math.random() * 1000000000000000) + 1000000000000000)
 			let res = null
-			await env.mobile_programming.prepare("insert into Accounts (AccountId, UserName, PassWordHash) values (?, ?, ?)").bind(newId, request.headers.get("userName"), request.headers.get("passwordHash")).run();
+			await env.mobile_programming.prepare("insert into Accounts (AccountId, UserName, PassWordHash, FavoriteFishingMethod, FavoritePlace, FavoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), request.headers.get("passwordHash")).run();
 			return new Response(newId, { status: 201 })
 		}
 		else if (pathname === "/api/v1/user" && request.method === "DELETE") {
