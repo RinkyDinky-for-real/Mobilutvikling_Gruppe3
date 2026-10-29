@@ -1,6 +1,6 @@
 import data from '../../assets/FakePosts.json';
 
-type MiniMapSpot = {
+type MiniMap = {
   id: string;
   longlat: [number, number];
   userid: string;
@@ -8,7 +8,7 @@ type MiniMapSpot = {
 
 export function createMiniMapsFromPosts(userid: string) {
     const posts = data.posts.filter(post => post.UserId === userid);
-    const createdPosts: MiniMapSpot[] = [];
+    const createdPosts: MiniMap[] = [];
 
     for (const post of posts) {
         createdPosts.push({
@@ -23,12 +23,12 @@ export function createMiniMapsFromPosts(userid: string) {
 export function createSingularMiniMapFromUserPost(userid: string, postid: string) {
     const post = data.posts.find(post => post.UserId === userid && post.PostId === postid);
     if (post) {
-        const miniMapSpot: MiniMapSpot = {
+        const miniMap: MiniMap = {
             id: post.PostId,
             longlat: [post.Longitude, post.Latitude],
             userid: post.UserId
         };
-        return miniMapSpot;
+        return miniMap;
     } else {
         return null;
     }

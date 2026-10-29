@@ -5,21 +5,17 @@ import { ImageSourcePropType, StyleSheet, View } from 'react-native';
 import {createMarkersFromUserPost} from '@/hooks/use-Create-Marker';
 import { spotmarker } from '@/components/mapComponents/spot-marker';
 import React from 'react';
+import { Marker, markerSchema } from '@/utils/markerSchema';
+import { z } from 'zod';
 
-type Spot = {
-  id: string;
-  longlat: [number, number];
-  photolink: ImageSourcePropType;
-  pointName: string;
-  RedirectLink: "/feed" | '/';
-};
 
-const spots: Spot[] = [];
+
+const markers: Marker[] = [];
 
 export default function HomeScreen() {
   
   const userId = "user1";
-  spots.push(...createMarkersFromUserPost(userId));
+  markers.push(...createMarkersFromUserPost(userId));
   
   return (
     <View style={styles.container}>
@@ -28,9 +24,9 @@ export default function HomeScreen() {
         mapStyle="https://tiles.openfreemap.org/styles/liberty"
         >
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
-          {spots.map((spot) => (
-          <React.Fragment key={spot.id}>
-            {spotmarker(spot.id, spot.longlat, spot.photolink, spot.pointName, spot.RedirectLink)}
+          {markers.map((marker) => (
+          <React.Fragment key={marker.id}>
+            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName, marker.RedirectLink)}
           </React.Fragment>
           ))}
       </Map>
