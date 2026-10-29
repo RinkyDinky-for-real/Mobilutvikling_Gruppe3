@@ -4,27 +4,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { colors, globalStyles } from '@/styles/global';
 
-type PostHeaderProps = {
-    id: number;
-    name: string;
-    time: string;
-}
+import type { Post } from '@/utils/post-schema'
 
-export default function({
-    id,
-    name, 
-    time,
-}: PostHeaderProps) {
+type PostHeaderProps = {
+    post: Post;
+};
+
+// make it so it recieves a post ID instead og a whole post. Then access Database to load the post.
+
+export default function PostHeader({post}: PostHeaderProps) {
+    const {id, name, time, likesCount} = post;
+
     return (
         <View>
-            <View>
-                <Text>
-                    {name}
-                </Text>
-                <Text>
-                    {time}
-                </Text>
-            </View>
+            <Text>
+                {name}
+            </Text>
         </View>
-    );
+    )
 }

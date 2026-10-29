@@ -8,26 +8,48 @@ import PostCard from '@/components/postComponents/PostCard';
 import type { Post } from "@/utils/post-schema"
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 
+type FeedPost = Post & {
+  liked: boolean;
+};
+
 // Temporary posts
-const posts: Post[] = [
+const initialPosts: Post[] = [
   { id: '1', name: 'Alex Fisher', time: '12 min ago', likesCount: 0 },
   { id: '2', name: 'Sam River', time: '1 hour ago', likesCount: 14 },
   { id: '3', name: 'Jamie Lake', time: '3 hours ago', likesCount: 2234 },
 ];
 
 export default function FeedScreen() {
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
+
+  const [posts, setPosts] = useState<FeedPost[]>(
+    initialPosts.map((post) => ({
+      ...post,
+      liked: false,
+  }))
+);
 
   const isDark = useColorScheme() === 'dark';
   const colors = Colors[isDark ? 'dark' : 'light'];
 
-  function toggleLike(postId: string) {
-    setLikedPosts((current) =>
-      current.includes(postId)
-        ? current.filter((id) => id !== postId)
-        : [...current, postId]
-    );
-  }
+function toggleLike(postId: string) {
+  setPosts((currentPosts) =>
+    currentPosts.map((post) => {
+      // Ignore posts that weren't clicked
+      if (post.id !== postId) {
+        return post;
+      }
+
+      // Toggle whether this post is liked
+      const liked = !post.liked;
+
+      return {
+        ...post,
+        liked: liked,
+        likesCount: post.likesCount + (liked ? 1 : -1),
+      };
+    })
+  );
+}
 
   function openPost(postId: string) {
     router.push({
@@ -47,12 +69,11 @@ export default function FeedScreen() {
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
-        extraData={likedPosts}
 
         renderItem={({ item }) => (
           <PostCard
             post={item}
-            liked={likedPosts.includes(item.id)}
+            liked={item.liked}
             onToggleLike={() => toggleLike(item.id)}
             onOpen={() => openPost(item.id)}
           />

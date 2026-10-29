@@ -1,21 +1,30 @@
 import { View, Text, StyleSheet } from 'react-native';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
+import { colors } from '@/styles/global';
+
+import PostHeader from '@/components/postComponents/PostHeader';
+
 
 export default function PostDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Post Details</Text>
-      <Text>Currently viewing post: {id}</Text>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaProvider style={styles.container}>
+        <Text style={styles.title}>Post Details</Text>
+        <Text>Currently viewing post: {id}</Text>
+
+      </SafeAreaProvider>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: colors.background,
+    justifyContent: "flex-start",
   },
   title: {
     fontSize: 24,

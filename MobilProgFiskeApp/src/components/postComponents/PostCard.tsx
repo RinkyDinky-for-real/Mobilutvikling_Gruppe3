@@ -32,9 +32,11 @@ export default function PostCard({
 
         {/* replace the heart unicode with heart icon from lucide*/}
       <Pressable onPress={onToggleLike}>
-        <Text>{liked ? '♥' : '♡'}</Text>
+        <View style={styles.postInfo}>
+          {liked ? <Heart fill={"red"}/> : <Heart fill={"#fff"}/> }
+          <Text>{likesCount}</Text>
+        </View>
       </Pressable>
-      <Text>{likesCount}</Text>
     </View>
   );
 }
@@ -45,4 +47,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEEEEE',
     borderRadius: 12,
   },
+  postInfo: {
+    flexDirection: "row",
+    margin: 12,
+    alignItems: "flex-end"
+  }
 });
