@@ -13,7 +13,7 @@ export function createMiniMapsFromPosts(userid: string) {
     for (const post of posts) {
         createdPosts.push({
             id: post.PostId,
-            longlat: [post.Longitude, post.Latitude],
+            longlat: [post.Longtitude, post.Latitude],
             userid: post.UserId
         });
     }
@@ -25,7 +25,7 @@ export function createSingularMiniMapFromUserPost(userid: string, postid: string
     if (post) {
         const miniMap: MiniMap = {
             id: post.PostId,
-            longlat: [post.Longitude, post.Latitude],
+            longlat: [post.Longtitude, post.Latitude],
             userid: post.UserId
         };
         return miniMap;

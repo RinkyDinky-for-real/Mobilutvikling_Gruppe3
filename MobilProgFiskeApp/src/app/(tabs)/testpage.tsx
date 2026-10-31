@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { UploadPost } from "@/hooks/use-Upload-Post";
 import { UploadUser } from "@/hooks/use-Upload-User";
 import { ThemedView } from "@/components/themed-view";
@@ -7,6 +7,8 @@ import { ThemedView } from "@/components/themed-view";
 export default function TestUploadScreen() {
   const [uploading, setUploading] = useState(false);
   const [creatingUser, setCreatingUser] = useState(false);
+  const [latitude, setLatitude] = useState("59.9139");
+  const [longitude, setLongitude] = useState("10.7522");
 
   async function createTestUser() {
     setCreatingUser(true);
@@ -34,6 +36,21 @@ export default function TestUploadScreen() {
   }
 
   async function testUpload() {
+    const latitudeValue = Number(latitude);
+    const longitudeValue = Number(longitude);
+
+    if (
+      !Number.isFinite(latitudeValue) ||
+      latitudeValue < -90 ||
+      latitudeValue > 90 ||
+      !Number.isFinite(longitudeValue) ||
+      longitudeValue < -180 ||
+      longitudeValue > 180
+    ) {
+      Alert.alert("Invalid coordinates", "Enter a valid latitude and longitude.");
+      return;
+    }
+
     setUploading(true);
 
     try {
@@ -52,8 +69,8 @@ export default function TestUploadScreen() {
         testUserId,
         "Test post",
         "Checking whether upload works",
-        59.9139, // latitude
-        10.7522, // longitude
+        latitudeValue,
+        longitudeValue,
         new Date().toISOString()
       );
 
@@ -73,6 +90,22 @@ export default function TestUploadScreen() {
 
   return (
     <View>
+      <Text>Latitude</Text>
+      <TextInput
+        value={latitude}
+        onChangeText={setLatitude}
+        keyboardType="decimal-pad"
+        placeholder="Latitude (-90 to 90)"
+        accessibilityLabel="Latitude"
+      />
+      <Text>Longitude</Text>
+      <TextInput
+        value={longitude}
+        onChangeText={setLongitude}
+        keyboardType="decimal-pad"
+        placeholder="Longitude (-180 to 180)"
+        accessibilityLabel="Longitude"
+      />
       <Pressable onPress={createTestUser} disabled={uploading || creatingUser}>
         <ThemedView style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
             <Text>{creatingUser ? "Creating user..." : "Create test user"}</Text>

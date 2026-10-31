@@ -4,7 +4,7 @@
         "Title": "Fishing Spot 1",
         "Content": "This is a great fishing spot!",
         "Latitude": 59.911491,
-        "Longitude": 10.757933,   
+        "Longtitude": 10.757933,
         "UserId": "user1"
     },
     {
@@ -12,7 +12,7 @@
         "Title": "Fishing Spot 2",
         "Content": "Another great fishing spot!",
         "Latitude": 59.913991,
-        "Longitude": 5.325919,   
+        "Longtitude": 5.325919,
         "UserId": "user1"
     },
     {
@@ -20,7 +20,7 @@
         "Title": "Fishing Spot 3",
         "Content": "Yet another great fishing spot!",
         "Latitude": 79.912491,
-        "Longitude": 15.757933,   
+        "Longtitude": 15.757933,
         "UserId": "user1"
     },
     {
@@ -28,7 +28,7 @@
         "Title": "Fishing Spot 4",
         "Content": "This is a great fishing spot!",
         "Latitude": 69.911491,
-        "Longitude": 10.757933,   
+        "Longtitude": 10.757933,
         "UserId": "user2"
     }
     ] }
