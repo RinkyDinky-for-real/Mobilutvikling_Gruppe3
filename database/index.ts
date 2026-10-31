@@ -1,8 +1,22 @@
-import { request } from "http";
+async function hash(value) {
+	const encoder = new TextEncoder()
+	const data = encoder.encode(value)
+	const buffer = await crypto.subtle.digest("SHA-256", data)
+	const hashArray = Array.from(new Uint8Array(buffer))
+	function mapFunction(b) {
+		return(b.toString(16).padStart(2, "0"))
+	}
+	return(hashArray.map(mapFunction).join(""))
+}
 // The database can be accessed on the following URL: https://mobile-programming.emilhesmyr.workers.dev/path/to/endpoint.
+
+
+
 export default {
 	async fetch(request: Request, env) {
-		
+		if (!request.url.toLowerCase().startsWith("https")) {
+			return (new Response("unsecure connection", {"status": 403}))
+		}
 		const { pathname } = new URL(request.url);
 		
 		//console.log(pathname)
@@ -36,7 +50,8 @@ export default {
 				await env.mobile_programming.prepare("update Accounts set UserName =  ? where AccountId = ? limit 1").bind(request.headers.get("userName"), request.headers.get("userId")).run()
 			}
 			if (request.headers.get("passwordHash")) {
-				await env.mobile_programming.prepare("update Accounts set PasswordHash = ? where AccountId = ? limit 1").bind(request.headers.get("passwordHash"), request.headers.get("userId")).run()
+				const h = await hash(request.headers.get("passwordHash"))
+				await env.mobile_programming.prepare("update Accounts set PasswordHash = ? where AccountId = ? limit 1").bind(h, request.headers.get("userId")).run()
 			}
 			if (request.headers.get("favoriteFishingPlace") != null) {
 				await env.mobile_programming.prepare("update Accounts set FavoritePlace = ? where AccountId = ?").bind(request.headers.get("favoriteFishingPlace"), request.headers.get("userId")).run()
@@ -84,7 +99,10 @@ export default {
 			}
 			const newId = String(Math.floor(Math.random() * 1000000000000000) + 1000000000000000)
 			let res = null
-			await env.mobile_programming.prepare("insert into Accounts (AccountId, UserName, PassWordHash, FavoriteFishingMethod, FavoritePlace, FavoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), request.headers.get("passwordHash")).run();
+			const h = await hash(request.headers.get("passwordHash"))
+			
+			
+			await env.mobile_programming.prepare("insert into Accounts (AccountId, UserName, PassWordHash, FavoriteFishingMethod, FavoritePlace, FavoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), h, ).run();
 			return new Response(newId, { status: 201 })
 		}
 		else if (pathname === "/api/v1/user" && request.method === "DELETE") {
