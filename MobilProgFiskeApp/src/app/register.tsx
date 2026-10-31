@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
@@ -23,9 +23,18 @@ export default function RegisterScreen() {
         password: result.error.issues.find((issue) => issue.path[0] === 'password')?.message,
       });
       return;
+
+      
     }
+
+    
     setErrors({});
-    router.replace('/');
+
+    Alert.alert(
+      'Registreringsskjema klart',
+      `Brukernavn: ${username}\nPassord: ${password}`,
+      [{ text: 'Gå til innlogging', onPress: () => router.replace('/') }],
+    );
   };
 
   return (
