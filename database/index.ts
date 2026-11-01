@@ -65,7 +65,15 @@ export default {
 
 			return (new Response("User updated", { "status": 202 }))
 		}
-
+		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId")) {
+			
+			const { results } = await env.mobile_programming.prepare("select * from Posts where PostId = ?").bind(request.headers.get("postId")).run()
+			let status = 200
+			if (results.length == 0) {
+				status = 404
+			}
+			return (Response.json(results, {"status": status}))
+		}
 		if (!(userId || request.method === "POST" || pathname === "/api/v1/post" && request.method === "DELETE")) {
 			return (new Response("UserId missing", {"status": 400}))
 		}
