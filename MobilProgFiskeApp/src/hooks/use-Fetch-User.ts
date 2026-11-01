@@ -1,6 +1,6 @@
 import { sendRequest } from '../databaseAPI';
 
-export async function fetchSingleUser(AccountId: string){
+export async function fetchUser(AccountId: string){
     try{
         const Result = await sendRequest('user', 'GET', { userId: AccountId });
         return Result;
