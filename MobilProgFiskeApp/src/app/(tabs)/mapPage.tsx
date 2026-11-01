@@ -4,23 +4,42 @@ import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { ImageSourcePropType, StyleSheet, View } from 'react-native';
 import {createMarkersFromUserPost} from '@/hooks/use-Create-Marker';
 import { spotmarker } from '@/components/mapComponents/spot-marker';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Marker, markerSchema } from '@/utils/markerSchema';
+import { z } from 'zod';
 
-type Spot = {
-  id: string;
-  longlat: [number, number];
-  photolink: ImageSourcePropType;
-  pointName: string;
-  RedirectLink: "/feed" | '/';
-};
 
-const spots: Spot[] = [];
+
+
+
 
 export default function HomeScreen() {
   
-  const userId = "user1";
-  spots.push(...createMarkersFromUserPost(userId));
+  const [markers, setMarkers] = useState<Marker[]>([]);
   
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadMarkers() {
+      try {
+        const userId = "1133794227705107";
+        const loadedMarkers = await createMarkersFromUserPost(userId);
+
+        if (!cancelled) {
+          setMarkers(loadedMarkers);
+        }
+      } catch (error) {
+        console.error("Failed to load map markers:", error);
+      }
+    }
+
+    loadMarkers();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <Map
@@ -28,9 +47,9 @@ export default function HomeScreen() {
         mapStyle="https://tiles.openfreemap.org/styles/liberty"
         >
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
-          {spots.map((spot) => (
-          <React.Fragment key={spot.id}>
-            {spotmarker(spot.id, spot.longlat, spot.photolink, spot.pointName, spot.RedirectLink)}
+          {markers.map((marker) => (
+          <React.Fragment key={marker.id}>
+            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName, marker.RedirectLink)}
           </React.Fragment>
           ))}
       </Map>

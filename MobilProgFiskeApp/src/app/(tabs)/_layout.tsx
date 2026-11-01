@@ -42,6 +42,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name='testpage'
+        options={{
+          title: 'Tests',
+          tabBarIcon: ({ color, size }) => (
+            <CircleUserRound size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
