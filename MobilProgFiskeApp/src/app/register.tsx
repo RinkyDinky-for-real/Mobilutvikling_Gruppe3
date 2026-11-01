@@ -12,10 +12,11 @@ export default function RegisterScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof registeredUser, string>>>({});
   const router = useRouter();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const result = registerSchema.safeParse({ username: username.trim(), password });
     if (!result.success) {
       setErrors({
@@ -23,18 +24,45 @@ export default function RegisterScreen() {
         password: result.error.issues.find((issue) => issue.path[0] === 'password')?.message,
       });
       return;
-
-      
     }
 
-    
     setErrors({});
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(
+        'https://mobile-programming.emilhesmyr.workers.dev/api/v1/user',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: result.data.username,
+            PassWordHash: result.data.password,
+            FavoriteFishingMethod: '',
+            FavoritePlace: '',
+            FavoriteFish: '',
+          }),
+        },
+      );
+      if (!response.ok) {
+        const details = await response.text();
+        throw new Error(
+          `Upload failed: ${response.status} ${response.statusText}. ${details}`,
+        );
+      }
 
-    Alert.alert(
-      'Registreringsskjema klart',
-      `Brukernavn: ${username}\nPassord: ${password}`,
-      [{ text: 'Gå til innlogging', onPress: () => router.replace('/') }],
-    );
+      Alert.alert(
+        'Konto opprettet',
+        'Du kan nå logge inn.',
+        [{ text: 'Gå til innlogging', onPress: () => router.replace('/') }],
+      );
+    } catch (error) {
+      Alert.alert(
+        'Registrering mislyktes',
+        error instanceof Error ? error.message : 'En uventet feil oppstod.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -118,10 +146,11 @@ export default function RegisterScreen() {
             <Pressable
               accessibilityRole="button"
               onPress={handleRegister}
-              style={styles.primaryButton}
+              disabled={isSubmitting}
+              style={[styles.primaryButton, isSubmitting && styles.disabledButton]}
             >
               <ThemedText type="code" style={styles.buttonText}>
-                Opprett konto
+                {isSubmitting ? 'Oppretter konto...' : 'Opprett konto'}
               </ThemedText>
             </Pressable>
 
@@ -226,6 +255,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two,
     alignItems: 'center',
     marginTop: Spacing.one,
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
   buttonText: {
     color: '#ffffff',
