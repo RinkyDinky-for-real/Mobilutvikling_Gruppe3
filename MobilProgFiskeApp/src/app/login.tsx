@@ -7,17 +7,17 @@ import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert('Mangler informasjon', 'Fyll inn e-post og passord.');
+    if (!userName || !password) {
+      Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
       return;
     }
 
-    Alert.alert('Logg inn', `Logger inn som ${email}`);
+    Alert.alert('Logg inn', `Logger inn som ${userName}`);
   };
 
   return (
@@ -34,15 +34,15 @@ export default function LoginScreen() {
 
           <ThemedView style={styles.inputGroup}>
             <ThemedText type="small" style={styles.inputLabel}>
-              E-post
+              Brukernavn
             </ThemedText>
             <TextInput
-              value={email}
-              onChangeText={setEmail}
-              placeholder="din@epost.no"
+              value={userName}
+              onChangeText={setUserName}
+              placeholder="brukernavn"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
-              keyboardType="email-address"
+              keyboardType="default"
               style={styles.input}
             />
           </ThemedView>
