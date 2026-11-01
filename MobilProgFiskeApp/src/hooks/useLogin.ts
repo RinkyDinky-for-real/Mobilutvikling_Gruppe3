@@ -1,0 +1,10 @@
+import { sendRequest } from "../databaseAPI";
+
+export async function login(userName: String, password: String) {
+    try {
+        res = await sendRequest("user", "PATCH", { "userName": userName, "passwordHash", password })
+    }
+    catch {
+        console.error("Unable to get user id")
+    }
+}
