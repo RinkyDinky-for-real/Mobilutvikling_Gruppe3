@@ -2,7 +2,7 @@ import { sendRequest } from "../databaseAPI";
 
 export async function login(userName: String, password: String) {
     try {
-        const res = await sendRequest("getuserid", "GET", { "userName": userName, "passwordHash": password })
+        const res = await sendRequest("user/getuserid", "GET", { "userName": userName, "passwordHash": password })
         return res
     }
     catch {
