@@ -16,12 +16,12 @@ export default function LoginScreen() {
   const router = useRouter();
 
   const handleLogin = async () => {
+    router.navigate('/(tabs)/profile');
     const accountId = username.trim();
     if (!accountId || !password) {
       Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
       return;
     }
-
     setIsLoggingIn(true);
     try {
       const response = await fetchUser(accountId);
