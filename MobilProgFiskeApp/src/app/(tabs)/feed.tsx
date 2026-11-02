@@ -7,6 +7,14 @@ import { router } from 'expo-router';
 import PostCard from '@/components/postComponents/PostCard';
 import type { Post } from "@/utils/post-schema"
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { SmallMapCard } from '@/components/mapComponents/small-map-card';
+
+type FeedPost = {
+  id: string;
+  name: string;
+  time: string;
+  longlat: [number, number];
+};
 
 type FeedPost = Post & {
   liked: boolean;

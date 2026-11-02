@@ -5,21 +5,46 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useRouter } from 'expo-router';
+import { fetchUser } from '@/hooks/use-Fetch-User';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const router = useRouter();
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert('Mangler informasjon', 'Fyll inn e-post og passord.');
+  const handleLogin = async () => {
+    const accountId = username.trim();
+    if (!accountId || !password) {
+      Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
       return;
     }
 
-    Alert.alert('Logg inn', `Logger inn som ${email}`);
+    setIsLoggingIn(true);
+    try {
+      const response = await fetchUser(accountId);
+      if (!response) {
+        throw new Error('Kunne ikke kontakte databasen.');
+      }
+      if (response.status === 404) {
+        Alert.alert('Kontoen finnes ikke', 'brukernavnet er ikke i databasen');
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(`Databasefeil: ${response.status} ${response.statusText}`);
+      }
+
+      router.navigate('/(tabs)/profile');
+    } catch (error) {
+      Alert.alert(
+        'Innlogging mislyktes',
+        error instanceof Error ? error.message : 'En uventet feil oppstod.',
+      );
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   return (
@@ -36,15 +61,16 @@ export default function LoginScreen() {
 
           <ThemedView style={styles.inputGroup}>
             <ThemedText type="small" style={styles.inputLabel}>
-              E-post
+              Brukernavn
             </ThemedText>
             <TextInput
-              value={email}
-              onChangeText={setEmail}
-              placeholder="din@epost.no"
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Ditt brukernavn"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
-              keyboardType="email-address"
+              autoComplete="username"
+              textContentType="username"
               style={styles.input}
             />
           </ThemedView>
@@ -73,9 +99,13 @@ export default function LoginScreen() {
             </ThemedView>
           </ThemedView>
 
-          <Pressable onPress={ () => router.navigate('/(tabs)/profile')} style={styles.primaryButton}>
+          <Pressable
+            onPress={handleLogin}
+            disabled={isLoggingIn}
+            style={[styles.primaryButton, isLoggingIn && styles.disabledButton]}
+          >
             <ThemedText type="code" style={styles.buttonText}>
-              Logg inn
+              {isLoggingIn ? 'Logger inn...' : 'Logg inn'}
             </ThemedText>
           </Pressable>
 
@@ -162,6 +192,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two,
     alignItems: 'center',
     marginTop: Spacing.one,
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
   buttonText: {
     color: '#ffffff',

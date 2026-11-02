@@ -2,43 +2,46 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { ImageSourcePropType, StyleSheet, View } from 'react-native';
-
+import {createMarkersFromUserPost} from '@/hooks/use-Create-Marker';
 import { spotmarker } from '@/components/mapComponents/spot-marker';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Marker, markerSchema } from '@/utils/markerSchema';
+import { z } from 'zod';
+import { useFocusEffect } from 'expo-router';
 
-type Spot = {
-  id: string;
-  longlat: [number, number];
-  photolink: ImageSourcePropType;
-  pointName: string;
-  RedirectLink: "/feed" | '/';
-};
 
-const spots: Spot[] = [
-  {
-    id: '1',
-    longlat: [10.7522, 59.9139],
-    photolink: require('../../../assets/images/photo1.jpg'),
-    pointName: 'Fishing Spot 1',
-    RedirectLink: '/feed',
-  },
-  {
-    id: '2',
-    longlat: [5.325919, 60.394306],
-    photolink: require('../../../assets/images/photo1.jpg'),
-    pointName: 'Fishing Spot 2',
-    RedirectLink: '/feed',
-  },
-  {
-    id: '3',
-    longlat: [7.325919, 61.394306],
-    photolink: require('../../../assets/images/photo1.jpg'),
-    pointName: 'Fishing Spot 3',
-    RedirectLink: '/feed',
-  },
-];
+
+
+
 
 export default function HomeScreen() {
+  let cancelled = false;
+  async function loadMarkers() {
+      try {
+        const userId = "1133794227705107";
+        const loadedMarkers = await createMarkersFromUserPost(userId);
+
+        if (!cancelled) {
+          setMarkers(loadedMarkers);
+        }
+      } catch (error) {
+        console.error("Failed to load map markers:", error);
+      }
+    }  
+  
+  const [markers, setMarkers] = useState<Marker[]>([]);
+
+  useFocusEffect(
+  React.useCallback(() => {
+    let cancelled = false;
+    console.log('Screen is now visible');
+    loadMarkers();
+    return () => {
+      cancelled = true;
+    };
+  }, [])
+);
+
   return (
     <View style={styles.container}>
       <Map
@@ -46,9 +49,9 @@ export default function HomeScreen() {
         mapStyle="https://tiles.openfreemap.org/styles/liberty"
         >
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
-          {spots.map((spot) => (
-          <React.Fragment key={spot.id}>
-            {spotmarker(spot.id, spot.longlat, spot.photolink, spot.pointName, spot.RedirectLink)}
+          {markers.map((marker) => (
+          <React.Fragment key={marker.id}>
+            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName, marker.RedirectLink)}
           </React.Fragment>
           ))}
       </Map>
