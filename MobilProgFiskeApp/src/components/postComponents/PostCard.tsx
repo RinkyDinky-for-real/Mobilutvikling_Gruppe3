@@ -1,41 +1,31 @@
 import { Pressable, Text, View, StyleSheet } from 'react-native';
-import type { Post } from "@/utils/post-schema"
+import type { Post } from "@/utils/postSchema"
 import { globalStyles } from '@/styles/global';
-import { Heart } from 'lucide-react-native';
 
 type PostCardProps = {
   post: Post;
-  liked: boolean;
-  onToggleLike: () => void;
   onOpen?: () => void;
 };
 
 export default function PostCard({
   post,
-  liked,
-  onToggleLike,
-  onOpen,
+  onOpen
 }: PostCardProps) {
-    const {id, name, time, likesCount } = post;
+    const {postid, userid, title, content, longitude, latitude, date } = post;
 
   return (
     <View>
       <Pressable onPress={onOpen} disabled={!onOpen}>
-        <Text>{name}</Text>
-        <Text>{time}</Text>
+        <Text>{postid}</Text>
+        <Text>{userid}</Text>
+        <Text>{title}</Text>
+        <Text>{content}</Text>
+        <Text>{longitude}</Text>
+        <Text>{latitude}</Text>
+        <Text>{date}</Text>
 
         {/* placeholder box where PostImage goes */}
-        <View 
-          style={[styles.postImage, globalStyles.shadow ]}
-        />
-      </Pressable>
-
-        {/* replace the heart unicode with heart icon from lucide*/}
-      <Pressable onPress={onToggleLike}>
-        <View style={styles.postInfo}>
-          {liked ? <Heart fill={"red"}/> : <Heart fill={"#fff"}/> }
-          <Text>{likesCount}</Text>
-        </View>
+        <View style={[styles.postImage, globalStyles.shadow ]}/>
       </Pressable>
     </View>
   );

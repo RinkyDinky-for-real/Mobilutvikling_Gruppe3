@@ -1,63 +1,63 @@
 
-import { useState } from 'react';
-import { FlatList, StyleSheet, Text, View, useColorScheme, } from 'react-native';
+import { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { colors } from '@/styles/global';
 
+import { postSchema, type Post } from "@/utils/postSchema"
 import PostCard from '@/components/postComponents/PostCard';
-import type { Post } from "@/utils/post-schema"
-import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
-import { SmallMapCard } from '@/components/mapComponents/small-map-card';
+import { fetchRandomPosts } from '@/hooks/use-Fetch-Posts';
 
-type FeedPost = {
-  id: string;
-  name: string;
-  time: string;
-  longlat: [number, number];
-};
-
-type FeedPost = Post & {
-  liked: boolean;
-};
-
-// Temporary posts
-const initialPosts: Post[] = [
-  { id: '1', name: 'Alex Fisher', time: '12 min ago', likesCount: 0 },
-  { id: '2', name: 'Sam River', time: '1 hour ago', likesCount: 14 },
-  { id: '3', name: 'Jamie Lake', time: '3 hours ago', likesCount: 2234 },
-];
+const accountId = "placeholder_account_id"; // Replace with actual account ID if needed
 
 export default function FeedScreen() {
 
-  const [posts, setPosts] = useState<FeedPost[]>(
-    initialPosts.map((post) => ({
-      ...post,
-      liked: false,
-  }))
-);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const isDark = useColorScheme() === 'dark';
-  const colors = Colors[isDark ? 'dark' : 'light'];
+  useEffect(() => {
+    let cancelled = false;
 
-function toggleLike(postId: string) {
-  setPosts((currentPosts) =>
-    currentPosts.map((post) => {
-      // Ignore posts that weren't clicked
-      if (post.id !== postId) {
-        return post;
+    async function loadPosts() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const fetchedPosts = await fetchRandomPosts(accountId, 20);
+
+        console.log("API Response:", fetchedPosts);
+
+        const result = postSchema.array().safeParse(fetchedPosts);
+
+        if (!result.success) {
+          console.error("Invalid post data:", result.error);
+          throw new Error("Invalid API response format");
+        }
+
+        if (!cancelled) {
+          setPosts(result.data);
+        }
+      } catch (err) {
+        console.error("Failed to load posts:", err);
+
+        if (!cancelled) {
+          setError("Failed to load posts.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
+    }
 
-      // Toggle whether this post is liked
-      const liked = !post.liked;
+    loadPosts();
 
-      return {
-        ...post,
-        liked: liked,
-        likesCount: post.likesCount + (liked ? 1 : -1),
-      };
-    })
-  );
-}
+    return () => {
+      cancelled = true;
+    };
+  }, [posts]);
 
   function openPost(postId: string) {
     router.push({
@@ -68,33 +68,28 @@ function toggleLike(postId: string) {
 
   return (
     <SafeAreaView
-      style={[
-        styles.safeArea,
-        { backgroundColor: colors.background },
-      ]}
+      style={styles.safeArea}
       edges={['top']}
     >
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.postid}
 
         renderItem={({ item }) => (
           <PostCard
             post={item}
-            liked={item.liked}
-            onToggleLike={() => toggleLike(item.id)}
-            onOpen={() => openPost(item.id)}
+            onOpen={() => openPost(item.postid)}
           />
         )}
 
         ListHeaderComponent={
-          <Text style={[styles.title, { color: colors.text }]}>
+          <Text style={styles.title}>
             Feed
           </Text>
         }
 
         ItemSeparatorComponent={() => (
-          <View style={{ height: Spacing.three }} />
+          <View style={{ height: 16 }} />
         )}
 
         contentContainerStyle={styles.listContent}
@@ -107,21 +102,23 @@ function toggleLike(postId: string) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: colors.background
   },
 
   listContent: {
     width: '100%',
-    maxWidth: MaxContentWidth,
+    maxWidth: 800,
     alignSelf: 'center',
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.five,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
 
   },
 
   title: {
     fontSize: 30,
     fontWeight: '700',
-    marginBottom: Spacing.three,
+    marginBottom: 16,
+    color: colors.text
   },
 });

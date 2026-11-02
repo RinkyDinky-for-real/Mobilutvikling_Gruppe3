@@ -6,9 +6,9 @@ export const postSchema = z.object({
     userid: z.string(),
     title: z.string(),
     content: z.string(),
-    longtitude: z.number(),
+    longitude: z.number(),
     latitude: z.number(),
     date: z.string(),
 });
 
-export type Marker = z.infer<typeof postSchema>;
+export type Post = z.infer<typeof postSchema>;

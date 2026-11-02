@@ -3,12 +3,11 @@ import { sendRequest} from "@/databaseAPI";
 
 
 export async function fetchSinglePost(PostId: string){
-    try{
-        const Result = await sendRequest('getpost', 'GET', { postid: PostId });
-        return Result;
-    }catch(Error){
-        console.log('fetch failed', Error)
-    };
+    const response = await sendRequest('getpost', 'GET', { postid: PostId });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch post: ${response.status}`);
+    }
+    return response.json();
 }
 
 export async function fetchAllPostsFromUser(AccountId: string){
