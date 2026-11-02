@@ -1,12 +1,14 @@
 import { useContext, useState } from 'react';
 import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import * as SecureStore from 'expo-secure-store';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
 import { AuthContext } from '../utils/context';
+import { Route } from 'expo-router/build/Route';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
   const [userName, setUserName] = useState('');
@@ -19,13 +21,16 @@ export default function LoginScreen() {
       return;
     }
 
-      Alert.alert('Logg inn', `Logger inn som ${userName}`);
-      const res: Response = login(userName, password).then
-      if (res.status != 200) {
-          Alert("Error", "Enten brukernavnet eller passordet er feil")
-      }
-      const { userId, setUserId } = useContext(AuthContext)
-      setUserId(res.text)
+    Alert.alert('Logg inn', `Logger inn som ${userName}`);
+    const res: Response = login(userName, password).then
+    if (res.status != 200) {
+      Alert("Error", "Enten brukernavnet eller passordet er feil")
+    }
+    const { userId, setUserId } = useContext(AuthContext)
+    setUserId(res.text)
+    SecureStore.setItem("userId", res.text)
+    const router = useRouter()
+    router.navigate("/(tabs)/feed")
   };
 
   return (
