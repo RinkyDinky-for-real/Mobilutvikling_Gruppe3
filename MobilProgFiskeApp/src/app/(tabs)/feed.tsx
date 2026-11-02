@@ -1,81 +1,97 @@
-import { useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useState } from 'react';
+import { FlatList, StyleSheet, Text, View, useColorScheme, } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+
+import PostCard from '@/components/postComponents/PostCard';
+import type { Post } from "@/utils/post-schema"
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 
-const posts = [
-  { id: '1', name: 'Alex Fisher', time: '12 min ago' },
-  { id: '2', name: 'Sam River', time: '1 hour ago' },
-  { id: '3', name: 'Jamie Lake', time: '3 hours ago' },
+type FeedPost = Post & {
+  liked: boolean;
+};
+
+// Temporary posts
+const initialPosts: Post[] = [
+  { id: '1', name: 'Alex Fisher', time: '12 min ago', likesCount: 0 },
+  { id: '2', name: 'Sam River', time: '1 hour ago', likesCount: 14 },
+  { id: '3', name: 'Jamie Lake', time: '3 hours ago', likesCount: 2234 },
 ];
 
 export default function FeedScreen() {
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
+
+  const [posts, setPosts] = useState<FeedPost[]>(
+    initialPosts.map((post) => ({
+      ...post,
+      liked: false,
+  }))
+);
+
   const isDark = useColorScheme() === 'dark';
   const colors = Colors[isDark ? 'dark' : 'light'];
-  const cardColor = isDark ? '#1C1D1F' : '#FFFFFF';
 
-  function toggleLike(postId: string) {
-    setLikedPosts((current) =>
-      current.includes(postId)
-        ? current.filter((id) => id !== postId)
-        : [...current, postId],
-    );
+function toggleLike(postId: string) {
+  setPosts((currentPosts) =>
+    currentPosts.map((post) => {
+      // Ignore posts that weren't clicked
+      if (post.id !== postId) {
+        return post;
+      }
+
+      // Toggle whether this post is liked
+      const liked = !post.liked;
+
+      return {
+        ...post,
+        liked: liked,
+        likesCount: post.likesCount + (liked ? 1 : -1),
+      };
+    })
+  );
+}
+
+  function openPost(postId: string) {
+    router.push({
+      pathname: '/posts/[id]',
+      params: { id: postId },
+    });
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>Feed</Text>
+    <SafeAreaView
+      style={[
+        styles.safeArea,
+        { backgroundColor: colors.background },
+      ]}
+      edges={['top']}
+    >
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.id}
 
-          {posts.map((post) => {
-            const liked = likedPosts.includes(post.id);
+        renderItem={({ item }) => (
+          <PostCard
+            post={item}
+            liked={item.liked}
+            onToggleLike={() => toggleLike(item.id)}
+            onOpen={() => openPost(item.id)}
+          />
+        )}
 
-            return (
-              <View key={post.id} style={[styles.post, { backgroundColor: cardColor }]}>
-                <View style={styles.postHeader}>
-                  <View style={styles.author}>
-                    <Text style={[styles.text, styles.semiboldText, { color: colors.text }]}>
-                      {post.name}
-                    </Text>
-                    <Text style={[styles.smallText, { color: colors.textSecondary }]}>
-                      {post.time}
-                    </Text>
-                  </View>
-                </View>
+        ListHeaderComponent={
+          <Text style={[styles.title, { color: colors.text }]}>
+            Feed
+          </Text>
+        }
 
-                <View
-                  style={[
-                    styles.imagePlaceholder,
-                    { backgroundColor: isDark ? '#292B2D' : '#F0F0F3' },
-                  ]}
-                />
+        ItemSeparatorComponent={() => (
+          <View style={{ height: Spacing.three }} />
+        )}
 
-                <View style={styles.actions}>
-                  <Pressable 
-                    onPress={() => toggleLike(post.id)}>
-                    <Text style={[styles.text, styles.likeText, liked && styles.liked]}>
-                      {liked ? '♥' : '♡'} {liked ? '1' : '0'}
-                    </Text>
-                  </Pressable>
-                  <Text style={[styles.text, { color: colors.textSecondary }]}>
-                    Comment
-                  </Text>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 }
@@ -84,63 +100,20 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  scrollContent: {
-    alignItems: 'center',
-    paddingBottom: Spacing.five,
-  },
-  content: {
+
+  listContent: {
     width: '100%',
     maxWidth: MaxContentWidth,
+    alignSelf: 'center',
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.three,
-    gap: Spacing.three,
+    paddingBottom: Spacing.five,
+
   },
+
   title: {
     fontSize: 30,
     fontWeight: '700',
-  },
-  post: {
-    padding: Spacing.three,
-    borderRadius: 18,
-    gap: Spacing.three,
-  },
-  postHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  author: {
-    flex: 1,
-    marginLeft: 10,
-    gap: 2,
-  },
-  text: {
-    fontSize: 14,
-  },
-  semiboldText: {
-    fontWeight: '600',
-  },
-  smallText: {
-    fontSize: 12,
-  },
-  menu: {
-    fontSize: 22,
-    fontWeight: '700',
-  },
-  imagePlaceholder: {
-    width: '100%',
-    aspectRatio: 1.2,
-    borderRadius: 12,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 20,
-  },
-  likeText: {
-    color: '#69736D',
-    fontSize: 16,
-  },
-  liked: {
-    color: '#E25F5F',
+    marginBottom: Spacing.three,
   },
 });
