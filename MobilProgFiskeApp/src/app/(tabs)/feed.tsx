@@ -9,7 +9,7 @@ import { postSchema, type Post } from "@/utils/postSchema"
 import PostCard from '@/components/postComponents/PostCard';
 import { fetchRandomPosts } from '@/hooks/use-Fetch-Posts';
 
-const accountId = "placeholder_account_id"; // Replace with actual account ID if needed
+const accountId = "1"; // Replace with api fetch for accountId
 
 export default function FeedScreen() {
 
@@ -43,7 +43,7 @@ export default function FeedScreen() {
         console.error("Failed to load posts:", err);
 
         if (!cancelled) {
-          setError("Failed to load posts.");
+          setError("Could not load posts.");
         }
       } finally {
         if (!cancelled) {
@@ -59,6 +59,7 @@ export default function FeedScreen() {
     };
   }, [posts]);
 
+  // Replace later with use-fetch-posts hook to fetch a single post and navigate to the post page
   function openPost(postId: string) {
     router.push({
       pathname: '/posts/[id]',
