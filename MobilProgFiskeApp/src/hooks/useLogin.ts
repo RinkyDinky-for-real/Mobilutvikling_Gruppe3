@@ -5,6 +5,6 @@ export async function login(userName: String, password: String) {
         res = await sendRequest("user/getuserid", "GET", { "userName": userName, "passwordHash", password })
     }
     catch {
-        console.error("Unable to get user id")
+        throw console.error("Unable to get user id")
     }
 }
