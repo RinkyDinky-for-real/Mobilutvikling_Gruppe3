@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, Alert, Modal, View, TextInput, Pressable } from "react-native";
+import { StyleSheet, ScrollView, Alert, Modal, View, Text, TextInput, Pressable, FlatList, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import ProfileHeader from "@/components/profileComponents/ProfileHeader";
@@ -8,9 +8,10 @@ import ProfileInfo from "@/components/profileComponents/ProfileInfo";
 import RecentCatches from "@/components/profileComponents/RecentCatches";
 import { fetchUser } from "@/hooks/use-Fetch-User";
 import { EditUser } from "@/hooks/use-Edit-User";
-import { fetchAllPostsFromUser, fetchPostsCountFromUser } from "@/hooks/use-Fetch-Posts";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { fetchAllPostsFromUser, fetchPostsCountFromUser, fetchRandomPosts } from "@/hooks/use-Fetch-Posts";
+import PostCard from "@/components/postComponents/PostCard";
+import { Post, postSchema } from "@/utils/postSchema";
+import { router } from "expo-router";
 
 export default function ProfileScreen() {
   const userId = "1133794227705107";
@@ -24,6 +25,9 @@ export default function ProfileScreen() {
     posts: [] as unknown[],
   });
   
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [editVisible, setEditVisible] = useState(false);
   const [draft, setDraft] = useState({
   favoriteFish: "",
@@ -95,6 +99,54 @@ export default function ProfileScreen() {
     void loadProfile();
   }, []);
 
+  useEffect(() => {
+      let cancelled = false;
+  
+      async function loadPosts() {
+        try {
+          setLoading(true);
+          setError(null);
+  
+          const fetchedPosts = await fetchRandomPosts(userId, 20);
+  
+          console.log("API Response:", fetchedPosts);
+  
+          const result = postSchema.array().safeParse(fetchedPosts);
+  
+          if (!result.success) {
+            console.error("Invalid post data:", result.error);
+            throw new Error("Invalid API response format");
+          }
+  
+          if (!cancelled) {
+            setPosts(result.data);
+          }
+        } catch (err) {
+          console.error("Failed to load posts:", err);
+  
+          if (!cancelled) {
+            setError("Could not load posts.");
+          }
+        } finally {
+          if (!cancelled) {
+            setLoading(false);
+          }
+        }
+      }
+  
+      loadPosts();
+  
+      return () => {
+        cancelled = true;
+      };
+    }, [posts]);
+
+    function openPost(postId: string) {
+        router.push({
+          pathname: '/posts/[id]',
+          params: { id: postId },
+        });
+      }
   return (
 
     <SafeAreaProvider>
@@ -115,7 +167,40 @@ export default function ProfileScreen() {
           fishingStyle={profileData.fishingStyle}
           onEdit={openEditForm}
         />
-        <RecentCatches/>
+        <FlatList
+                data={posts}
+                keyExtractor={(item) => item.postid}
+        
+                renderItem={({ item }) => (
+                  <PostCard
+                    post={item}
+                    onOpen={() => openPost(item.postid)}
+                  />
+                )}
+        
+                ListHeaderComponent={
+                  <Text style={styles.title}>
+                    Feed
+                  </Text>
+                }
+        
+                ListEmptyComponent={
+                  loading ? (
+                    <ActivityIndicator size="large" />
+                  ) : (
+                    <Text>
+                      {error || "No posts available."}
+                    </Text>
+                  )
+                }
+        
+                ItemSeparatorComponent={() => (
+                  <View style={{ height: 16 }} />
+                )}
+        
+                contentContainerStyle={styles.listContent}
+                showsVerticalScrollIndicator={false}
+              />
         </ScrollView>
         <Modal
           visible={editVisible}
@@ -123,28 +208,28 @@ export default function ProfileScreen() {
           animationType="slide"
           onRequestClose={() => setEditVisible(false)}
         >
-          <ThemedView style={styles.editcontainer}>
+          <View style={styles.editcontainer}>
             
-            <ThemedText type="title">Edit Profile</ThemedText>
-              <ThemedView>
-                <ThemedText>Favorite fish</ThemedText>
+            <Text style={styles.edittitle} >Edit Profile</Text>
+              <View>
+                <Text style={styles.edittext}>Favorite fish</Text>
                   <TextInput
                     value={draft.favoriteFish}
                     onChangeText={(value) =>
                       setDraft((current) => ({ ...current, favoriteFish: value }))
                     }
                   />
-              </ThemedView>
-              <ThemedView>        
-                <ThemedText>Favorite spot</ThemedText>
+              </View>
+              <View>        
+                <Text>Favorite spot</Text>
                 <TextInput
                   value={draft.favoriteSpot}
                   onChangeText={(value) =>
                     setDraft((current) => ({ ...current, favoriteSpot: value }))
                   }
                 />
-              </ThemedView>
-            <ThemedText>Fishing style</ThemedText>
+              </View>
+            <Text style={styles.edittext} >Fishing style</Text>
             <TextInput
               value={draft.fishingStyle}
               onChangeText={(value) =>
@@ -153,12 +238,12 @@ export default function ProfileScreen() {
             />
 
             <Pressable onPress={() => void saveProfile()} disabled={saving}>
-              <ThemedText>{saving ? "Saving..." : "Save"}</ThemedText>
+              <Text>{saving ? "Saving..." : "Save"}</Text>
             </Pressable>
             <Pressable onPress={() => setEditVisible(false)}>
-              <ThemedText>Cancel</ThemedText>
+              <Text>Cancel</Text>
             </Pressable>
-          </ThemedView>
+          </View>
         </Modal>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -181,6 +266,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
+  edittitle:{
+    fontSize: 48,
+    fontWeight: "400",
+  },
+  edittext:{
+    fontSize: 16,
+    fontWeight: "400",
+  },
   scrollContainer: {
     flexGrow: 1,
     alignItems: "stretch",
@@ -189,6 +282,15 @@ const styles = StyleSheet.create({
   backgroundImage: {
     position: "absolute",
     top: 0,
+  },
+  listContent: {
+    width: '100%',
+    maxWidth: 800,
+    alignSelf: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
+
   },
 });
 
