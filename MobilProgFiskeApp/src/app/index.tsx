@@ -16,5 +16,9 @@ function Checker() {
     return (<Redirect href = "/login"></Redirect>)
 }
 export default function Main() {
-    return(<AuthContextProvider><Checker</AuthContextProvider>)
+    return(
+    <AuthContextProvider>
+        <Checker></Checker>
+    </AuthContextProvider>
+)
 }
