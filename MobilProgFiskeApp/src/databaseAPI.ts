@@ -8,8 +8,9 @@ export async function sendRequest(endPoint: string, method: string, headers: any
         return(r)
 
     }
-    catch {
-        throw Error ('Failed request')
+    catch (error){
+        console.log(error)
+        throw error;
     }
     
 }

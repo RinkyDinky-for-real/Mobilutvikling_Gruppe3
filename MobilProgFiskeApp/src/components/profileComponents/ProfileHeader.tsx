@@ -6,8 +6,6 @@ type ProfileHeaderProps = {
   username: string;
   profilePicture: string;
   backgroundImage?: string;
-  followersCount: number;
-  catches: number;
   spots: number;
 };
 

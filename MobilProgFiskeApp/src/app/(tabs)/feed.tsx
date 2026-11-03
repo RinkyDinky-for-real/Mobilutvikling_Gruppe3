@@ -1,77 +1,111 @@
-import { useState } from 'react';
-import {Pressable,ScrollView,StyleSheet,Text,View,useColorScheme,} from 'react-native';
+
+import { useState, useEffect, Activity } from 'react';
+import { ActivityIndicator,FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { colors } from '@/styles/global';
 
-import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
-import { SmallMapCard } from '@/components/mapComponents/small-map-card';
+import { postSchema, type Post } from "@/utils/postSchema"
+import PostCard from '@/components/postComponents/PostCard';
+import { fetchRandomPosts } from '@/hooks/use-Fetch-Posts';
 
-type FeedPost = {
-  id: string;
-  name: string;
-  time: string;
-  longlat: [number, number];
-};
-
-const posts = [
-  { id: '1', name: 'Alex Fisher', time: '12 min ago', longlat: [10.757933, 59.911491] },
-  { id: '2', name: 'Sam River', time: '1 hour ago', longlat: [5.325919, 59.913991] },
-  { id: '3', name: 'Jamie Lake', time: '3 hours ago', longlat: [15.757933, 79.912491] },
-] satisfies FeedPost[];
+const accountId = "1"; // Replace with api fetch for accountId
 
 export default function FeedScreen() {
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
-  const isDark = useColorScheme() === 'dark';
-  const colors = Colors[isDark ? 'dark' : 'light'];
-  const cardColor = isDark ? '#1C1D1F' : '#FFFFFF';
 
-  function toggleLike(postId: string) {
-    setLikedPosts((current) =>
-      current.includes(postId)
-        ? current.filter((id) => id !== postId)
-        : [...current, postId],
-    );
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPosts() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const fetchedPosts = await fetchRandomPosts(accountId, 20);
+
+        console.log("API Response:", fetchedPosts);
+
+        const result = postSchema.array().safeParse(fetchedPosts);
+
+        if (!result.success) {
+          console.error("Invalid post data:", result.error);
+          throw new Error("Invalid API response format");
+        }
+
+        if (!cancelled) {
+          setPosts(result.data);
+        }
+      } catch (err) {
+        console.error("Failed to load posts:", err);
+
+        if (!cancelled) {
+          setError("Could not load posts.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadPosts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [posts]);
+
+  // Replace later with use-fetch-posts hook to fetch a single post and navigate to the post page
+  function openPost(postId: string) {
+    router.push({
+      pathname: '/posts/[id]',
+      params: { id: postId },
+    });
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>Feed</Text>
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={['top']}
+    >
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.postid}
 
-          {posts.map((post) => {
-            const liked = likedPosts.includes(post.id);
+        renderItem={({ item }) => (
+          <PostCard
+            post={item}
+            onOpen={() => openPost(item.postid)}
+          />
+        )}
 
-            return (
-              <View key={post.id} style={[styles.post, { backgroundColor: cardColor }]}>
-                <View style={styles.postHeader}>
-                  <View style={styles.author}>
-                    <Text style={[styles.text, styles.semiboldText, { color: colors.text }]}>
-                      {post.name}
-                    </Text>
-                    <Text style={[styles.smallText, { color: colors.textSecondary }]}>
-                      {post.time}
-                    </Text>
-                  </View>
-                </View>
+        ListHeaderComponent={
+          <Text style={styles.title}>
+            Feed
+          </Text>
+        }
 
-                <SmallMapCard longlat={post.longlat} />
+        ListEmptyComponent={
+          loading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <Text>
+              {error || "No posts available."}
+            </Text>
+          )
+        }
 
-                <View style={styles.actions}>
-                  <Pressable
-                    onPress={() => toggleLike(post.id)}>
-                    <Text style={[styles.text, styles.likeText, liked && styles.liked]}>
-                      {liked ? '♥' : '♡'} {liked ? '1' : '0'}
-                    </Text>
-                  </Pressable>
-                  <Text style={[styles.text, { color: colors.textSecondary }]}>
-                    Comment
-                  </Text>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+        ItemSeparatorComponent={() => (
+          <View style={{ height: 16 }} />
+        )}
+
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 }
@@ -79,59 +113,23 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: colors.background
   },
-  scrollContent: {
-    alignItems: 'center',
-    paddingBottom: Spacing.five,
-  },
-  content: {
+
+  listContent: {
     width: '100%',
-    maxWidth: MaxContentWidth,
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-    gap: Spacing.three,
+    maxWidth: 800,
+    alignSelf: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
+
   },
+
   title: {
     fontSize: 30,
     fontWeight: '700',
-  },
-  post: {
-    padding: Spacing.three,
-    borderRadius: 18,
-    gap: Spacing.three,
-  },
-  postHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  author: {
-    flex: 1,
-    marginLeft: 10,
-    gap: 2,
-  },
-  text: {
-    fontSize: 14,
-  },
-  semiboldText: {
-    fontWeight: '600',
-  },
-  smallText: {
-    fontSize: 12,
-  },
-  menu: {
-    fontSize: 22,
-    fontWeight: '700',
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 20,
-  },
-  likeText: {
-    color: '#69736D',
-    fontSize: 16,
-  },
-  liked: {
-    color: '#E25F5F',
+    marginBottom: 16,
+    color: colors.text
   },
 });
