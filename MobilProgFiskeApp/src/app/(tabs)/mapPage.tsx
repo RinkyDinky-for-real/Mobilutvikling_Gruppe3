@@ -34,7 +34,6 @@ export default function HomeScreen() {
   useFocusEffect(
   React.useCallback(() => {
     let cancelled = false;
-    console.log('Screen is now visible');
     loadMarkers();
     return () => {
       cancelled = true;
