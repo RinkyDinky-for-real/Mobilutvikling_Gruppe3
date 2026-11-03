@@ -7,7 +7,7 @@ export const registerSchema = z.object({
   .min(2, 'Brukernavn er påkrevd'),
   password: z
   .string()
-  .regex(new RegExp('^(?=.*[a-zæøå])(?=.*[A-ZÆØÅ])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-zæøå\\d@$!%*?&]{6,}$'), 'Passord må inneholde minst en stor bokstav, en liten bokstav, ett tall og ett spesialtegn')
+  .regex(new RegExp('^(?=.*[a-zæøå])(?=.*[A-ZÆØÅ])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-zæøåÆØÅ\\d@$!%*?&]{6,}$'), 'Passord må inneholde minst en stor bokstav, en liten bokstav, ett tall og ett spesialtegn')
   .min(6, 'Passord må være minst 6 tegn langt'),
 
 });
