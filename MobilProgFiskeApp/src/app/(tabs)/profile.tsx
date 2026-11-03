@@ -1,10 +1,10 @@
 import { StyleSheet, Text, ScrollView} from "react-native";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import ProfileHeader from "@/components/profile/ProfileHeader";
+import ProfileHeader from "@/components/profileComponents/ProfileHeader";
 import { colors } from '@/styles/global';
-import ProfileStats from "@/components/profile/ProfileStats";
-import ProfileInfo from "@/components/profile/ProfileInfo";
-import RecentCatches from "@/components/profile/RecentCatches";
+import ProfileStats from "@/components/profileComponents/ProfileStats";
+import ProfileInfo from "@/components/profileComponents/ProfileInfo";
+import RecentCatches from "@/components/profileComponents/RecentCatches";
 
 export default function ProfileScreen() {
   return (

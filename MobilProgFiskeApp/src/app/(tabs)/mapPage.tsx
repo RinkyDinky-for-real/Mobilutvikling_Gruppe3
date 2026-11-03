@@ -7,6 +7,7 @@ import { spotmarker } from '@/components/mapComponents/spot-marker';
 import React, { useEffect, useState } from 'react';
 import { Marker, markerSchema } from '@/utils/markerSchema';
 import { z } from 'zod';
+import { useFocusEffect } from 'expo-router';
 
 
 
@@ -14,13 +15,8 @@ import { z } from 'zod';
 
 
 export default function HomeScreen() {
-  
-  const [markers, setMarkers] = useState<Marker[]>([]);
-  
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadMarkers() {
+  let cancelled = false;
+  async function loadMarkers() {
       try {
         const userId = "1133794227705107";
         const loadedMarkers = await createMarkersFromUserPost(userId);
@@ -31,14 +27,20 @@ export default function HomeScreen() {
       } catch (error) {
         console.error("Failed to load map markers:", error);
       }
-    }
+    }  
+  
+  const [markers, setMarkers] = useState<Marker[]>([]);
 
+  useFocusEffect(
+  React.useCallback(() => {
+    let cancelled = false;
+    console.log('Screen is now visible');
     loadMarkers();
-
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [])
+);
 
   return (
     <View style={styles.container}>
