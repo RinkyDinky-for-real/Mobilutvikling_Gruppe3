@@ -5,7 +5,7 @@ import { Redirect } from "expo-router";
 function Checker() {
     
     const { userId, setUserId } = useContext(AuthContext)
-    // todo, check the secure store if the userId is located there, and if so, update the context
+    
     let path = ""
     if (userId) {
         path = "./(tabs)"
@@ -13,8 +13,8 @@ function Checker() {
     else {
         path = "./login"
     }
-    return (<Redirect href = "/login"></Redirect>)
+    return (<Redirect href = {path}></Redirect>)
 }
 export default function Main() {
-    return(<AuthContextProvider><Checker</AuthContextProvider>)
+    return(<AuthContextProvider><Checker></Checker></AuthContextProvider>)
 }
