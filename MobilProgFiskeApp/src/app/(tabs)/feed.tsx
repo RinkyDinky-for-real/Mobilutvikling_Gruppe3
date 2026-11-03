@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { useState, useEffect, Activity } from 'react';
+import { ActivityIndicator,FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { colors } from '@/styles/global';
@@ -86,6 +86,16 @@ export default function FeedScreen() {
           <Text style={styles.title}>
             Feed
           </Text>
+        }
+
+        ListEmptyComponent={
+          loading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <Text>
+              {error || "No posts available."}
+            </Text>
+          )
         }
 
         ItemSeparatorComponent={() => (
