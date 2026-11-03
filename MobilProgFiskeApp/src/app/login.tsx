@@ -1,26 +1,47 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as SecureStore from 'expo-secure-store';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { login } from '../hooks/useLogin';
+import { AuthContext } from '../utils/context';
+import { Route } from 'expo-router/build/Route';
 import { useRouter } from 'expo-router';
-import EmailPassword from '@/components/login';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const auth = useContext(AuthContext);
+  const router = useRouter()
 
-  const router = useRouter();
+  if (auth === null) {
+    throw new Error("av en eller annen grunn så må erroren være der");
+  }
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert('Mangler informasjon', 'Fyll inn e-post og passord.');
+  const { setUserId } = auth;
+
+
+  const handleLogin = async () => {
+    
+    if (!userName || !password) {
+      Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
       return;
     }
 
-    Alert.alert('Logg inn', `Logger inn som ${email}`);
+    Alert.alert('Logg inn', `Logger inn som ${userName}`);
+    const res = await login(userName, password);
+    console.log(res);
+    if (res.status != 200) {
+      Alert.alert("Error", "Enten brukernavnet eller passordet er feil")
+      return;
+    }
+    const id = await res.text();
+    setUserId(id);
+    SecureStore.setItem("userId", id)
+    router.navigate("/(tabs)/feed")
   };
 
   return (
@@ -31,14 +52,18 @@ export default function LoginScreen() {
             Logg inn
           </ThemedText>
 
+          <ThemedText type="small" style={styles.subtitle}>
+            Velkommen tilbake
+          </ThemedText>
+
           <ThemedView style={styles.inputGroup}>
             <ThemedText type="small" style={styles.inputLabel}>
               Brukernavn
             </ThemedText>
             <TextInput
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Ditt brukernavn"
+              value={userName}
+              onChangeText={setUserName}
+              placeholder="brukernavn"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
               keyboardType="default"
@@ -70,16 +95,14 @@ export default function LoginScreen() {
             </ThemedView>
           </ThemedView>
 
-          <Pressable onPress={ () => router.navigate('/(tabs)/profile')} style={styles.primaryButton}>
+          <Pressable onPress={handleLogin} style={styles.primaryButton}>
             <ThemedText type="code" style={styles.buttonText}>
               Logg inn
             </ThemedText>
           </Pressable>
 
-          <Pressable onPress={() => router.navigate('/register')} style={styles.secondaryButton}>
-            <ThemedText type="small" style={styles.secondaryButtonText}>
-              Opprett konto
-            </ThemedText>
+          <Pressable style={styles.secondaryButton}>
+            <ThemedText type="small">Glemt passord?</ThemedText>
           </Pressable>
         </ThemedView>
       </SafeAreaView>
@@ -109,10 +132,7 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     borderRadius: 24,
     backgroundColor: '#ffffff',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
+    boxShadow: '0px 8px 14px rgba(0, 0, 0, 0.08)',
     elevation: 5,
   },
   title: {
@@ -175,12 +195,4 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two,
     marginTop: Spacing.one,
   },
-  secondaryButtonText: {
-    color: '#ffffff',
-  },
 });
-
-
-export function Main() {
-    return (<EmailPassword signUp={true} text="asdf" onForgottPassword={null} onSignup={null} onSubmit={undefined}></EmailPassword>)
-}
