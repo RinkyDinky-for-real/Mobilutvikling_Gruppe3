@@ -8,16 +8,22 @@ import { colors } from '@/styles/global';
 import { postSchema, type Post } from "@/utils/postSchema"
 import PostCard from '@/components/postComponents/PostCard';
 import { fetchRandomPosts } from '@/hooks/use-Fetch-Posts';
-
-const accountId = "1"; // Replace with api fetch for accountId
+import { useAuth } from '@/utils/context';
 
 export default function FeedScreen() {
 
+  const { userId } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!userId) {
+      setPosts([]);
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
 
     async function loadPosts() {
@@ -25,7 +31,7 @@ export default function FeedScreen() {
         setLoading(true);
         setError(null);
 
-        const fetchedPosts = await fetchRandomPosts(accountId, 20);
+        const fetchedPosts = await fetchRandomPosts(userId, 20);
 
         console.log("API Response:", fetchedPosts);
 
@@ -57,7 +63,7 @@ export default function FeedScreen() {
     return () => {
       cancelled = true;
     };
-  }, [posts]);
+  }, [userId]);
 
   // Replace later with use-fetch-posts hook to fetch a single post and navigate to the post page
   function openPost(postId: string) {

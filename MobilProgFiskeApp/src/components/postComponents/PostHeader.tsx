@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { colors, globalStyles } from '@/styles/global';
 
-import type { Post } from '@/utils/post-schema'
+import type { Post } from '@/utils/postSchema'
 
 type PostHeaderProps = {
     post: Post;
