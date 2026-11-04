@@ -68,9 +68,9 @@ export default {
 
 			return (new Response("User updated", { "status": 202 }))
 		}
-		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId")) {
+		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId") && request.headers.get("userId")) {
 			
-			const { results } = await env.mobile_programming.prepare("select Title, Content, latitude, longtitude, Date from Posts where PostId = ?").bind(request.headers.get("postId")).run()
+			const { results } = await env.mobile_programming.prepare("SELECT Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? and Accounts.AccountId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
 			let status = 200
 			if (results.length == 0) {
 				status = 404
@@ -89,13 +89,13 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
+			query = "SELECT Accounts.UserName, PostId, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
 			value = userId
 		}
 		else if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
 
-			query = "SELECT Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
+			query = "SELECT PostId, Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
 			value = userId
 			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
 			return (Response.json(results))
@@ -142,11 +142,12 @@ export default {
 			return (new Response(newId, {"status": 201}))
 
 		}
-		else if (pathname === "/api/v1/post" && request.method === "DELETE" && request.headers.get("postId")) {
+		else if (pathname === "/api/v1/post" && request.method === "DELETE" && request.headers.get("postId") && userId) {
 			shouldSend = true
-			query = "delete from Posts where PostId = ?"
+			query = "delete from Posts where PostId = ? and UserId = ?"
 			value = request.headers.get("postId")
-			
+			env.mobile_programming.prepare(query).bind(value, userId).run()
+			return(new Response(""))
 		}
 		else if (pathname === "/api/v1/user/count" && request.method === "GET") {
 			
