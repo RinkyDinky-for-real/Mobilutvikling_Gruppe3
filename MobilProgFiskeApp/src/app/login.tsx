@@ -27,15 +27,15 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     
     if (!userName || !password) {
-      Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
+      Alert.alert('Missing Information', 'Enter your username and password');
       return;
     }
 
-    Alert.alert('Logg inn', `Logger inn som ${userName}`);
+    Alert.alert('Log in', `Logging in as: ${userName}`);
     const res = await login(userName, password);
     console.log(res);
     if (res.status != 200) {
-      Alert.alert("Error", "Enten brukernavnet eller passordet er feil")
+      Alert.alert("Error", "Invalid username or password");
       return;
     }
     const id = await res.text();
@@ -49,21 +49,21 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.safeArea}>
         <ThemedView style={styles.card}>
           <ThemedText type="title" style={styles.title}>
-            Logg inn
+            Log in
           </ThemedText>
 
           <ThemedText type="small" style={styles.subtitle}>
-            Velkommen tilbake
+            Welcome Back
           </ThemedText>
 
           <ThemedView style={styles.inputGroup}>
             <ThemedText type="small" style={styles.inputLabel}>
-              Brukernavn
+              Username
             </ThemedText>
             <TextInput
               value={userName}
               onChangeText={setUserName}
-              placeholder="brukernavn"
+              placeholder="Enter your username"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
               keyboardType="default"
@@ -73,13 +73,13 @@ export default function LoginScreen() {
 
           <ThemedView style={styles.inputGroup}>
             <ThemedText type="small" style={styles.inputLabel}>
-              Passord
+              Password
             </ThemedText>
             <ThemedView style={styles.passwordRow}>
               <TextInput
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Skriv inn passord"
+                placeholder="Enter your passord"
                 placeholderTextColor="#6b7280"
                 secureTextEntry={!showPassword}
                 style={[styles.input, styles.passwordInput]}
@@ -89,7 +89,7 @@ export default function LoginScreen() {
                 style={styles.toggleButton}
               >
                 <ThemedText type="small" style={styles.inputLabel}>
-                  {showPassword ? 'Skjul' : 'Vis'}
+                  {showPassword ? 'Hide' : 'Show'}
                 </ThemedText>
               </Pressable>
             </ThemedView>
@@ -97,12 +97,12 @@ export default function LoginScreen() {
 
           <Pressable onPress={handleLogin} style={styles.primaryButton}>
             <ThemedText type="code" style={styles.buttonText}>
-              Logg inn
+              Log in
             </ThemedText>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton}>
-            <ThemedText type="small">Glemt passord?</ThemedText>
+          <Pressable onPress={()=> router.push('/register')}style={styles.secondaryButton}>
+            <ThemedText type="small">Sign Up</ThemedText>
           </Pressable>
         </ThemedView>
       </SafeAreaView>

@@ -5,7 +5,6 @@ import { ThemedView } from "@/components/themed-view";
 import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
-import { withDelay } from "react-native-reanimated";
 
 export default function CreatePostScreen() {
   const [uploading, setUploading] = useState(false);

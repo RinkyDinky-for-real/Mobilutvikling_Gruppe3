@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, TextInput, View, Text, } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
@@ -31,14 +31,14 @@ export default function RegisterScreen() {
     setErrors({});
 
     Alert.alert(
-      'Registreringsskjema klart',
-      `Brukernavn: ${username}\nPassord: ${password}`,
-      [{ text: 'Gå til innlogging', onPress: () => router.replace('/') }],
+      'User Registered:',
+      `Username: ${username}\nPassword: ${password}`,
+      [{ text: 'Go to login', onPress: () => router.replace('/') }],
     );
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
           style={styles.scrollView}
@@ -46,26 +46,26 @@ export default function RegisterScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <ThemedView style={styles.card}>
-            <ThemedText type="title" style={styles.title}>
-              Opprett konto
-            </ThemedText>
+          <View style={styles.card}>
+            <Text style={styles.title}>
+              Create Account
+            </Text>
 
-            <ThemedText type="small" style={styles.subtitle}>
-              Bli med i Fiskeappen
-            </ThemedText>
+            <Text style={styles.subtitle}>
+              Join the Fishing App
+            </Text>
 
-            <ThemedView style={styles.inputGroup}>
-              <ThemedText type="small" style={styles.inputLabel}>
-                Brukernavn
-              </ThemedText>
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>
+                Enter Username
+              </Text>
               <TextInput
                 value={username}
                 onChangeText={(value) => {
                   setUsername(value);
                   setErrors((current) => ({ ...current, username: undefined }));
                 }}
-                placeholder="Velg et brukernavn"
+                placeholder="Choose a username"
                 placeholderTextColor="#6b7280"
                 autoCapitalize="none"
                 autoComplete="username"
@@ -73,24 +73,24 @@ export default function RegisterScreen() {
                 style={styles.input}
               />
               {errors.username && (
-                <ThemedText type="small" style={styles.errorText}>
+                <Text style={styles.errorText}>
                   {errors.username}
-                </ThemedText>
+                </Text>
               )}
-            </ThemedView>
+            </View>
 
-            <ThemedView style={styles.inputGroup}>
-              <ThemedText type="small" style={styles.inputLabel}>
-                Passord
-              </ThemedText>
-              <ThemedView style={styles.passwordRow}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>
+                Password
+              </Text>
+              <View style={styles.passwordRow}>
                 <TextInput
                   value={password}
                   onChangeText={(value) => {
                     setPassword(value);
                     setErrors((current) => ({ ...current, password: undefined }));
                   }}
-                  placeholder="Minst 8 tegn"
+                  placeholder="At least 8 characters."
                   placeholderTextColor="#6b7280"
                   autoComplete="new-password"
                   textContentType="newPassword"
@@ -99,30 +99,30 @@ export default function RegisterScreen() {
                 />
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel={showPassword ? 'Skjul passord' : 'Vis passord'}
+                  accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
                   onPress={() => setShowPassword((current) => !current)}
                   style={styles.toggleButton}
                 >
-                  <ThemedText type="small" style={styles.inputLabel}>
-                    {showPassword ? 'Skjul' : 'Vis'}
-                  </ThemedText>
+                  <Text style={styles.inputLabel}>
+                    {showPassword ? 'Hide' : 'Show'}
+                  </Text>
                 </Pressable>
-              </ThemedView>
+              </View>
               {errors.password && (
-                <ThemedText type="small" style={styles.errorText}>
+                <Text style={styles.errorText}>
                   {errors.password}
-                </ThemedText>
+                </Text>
               )}
-            </ThemedView>
+            </View>
 
             <Pressable
               accessibilityRole="button"
               onPress={handleRegister}
               style={styles.primaryButton}
             >
-              <ThemedText type="code" style={styles.buttonText}>
+              <Text style={styles.buttonText}>
                 Opprett konto
-              </ThemedText>
+              </Text>
             </Pressable>
 
             <Pressable
@@ -130,14 +130,14 @@ export default function RegisterScreen() {
               onPress={() => router.replace('/')}
               style={styles.secondaryButton}
             >
-              <ThemedText type="small" style={styles.secondaryButtonText}>
-                Har du allerede en konto? Logg inn
-              </ThemedText>
+              <Text style={styles.secondaryButtonText}>
+                Already have an account? Log in
+              </Text>
             </Pressable>
-          </ThemedView>
+          </View>
         </ScrollView>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -178,6 +178,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
+    fontSize: 48,
+    fontWeight: '400',
     textAlign: 'center',
     marginBottom: Spacing.one,
   },
