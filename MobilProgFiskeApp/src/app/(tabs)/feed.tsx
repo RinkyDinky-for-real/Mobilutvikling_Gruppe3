@@ -68,7 +68,7 @@ export default function FeedScreen() {
   // Replace later with use-fetch-posts hook to fetch a single post and navigate to the post page
   function openPost(postId: string) {
     router.push({
-      pathname: '/posts/[id]',
+      pathname: '/post',
       params: { id: postId },
     });
   }
@@ -80,12 +80,12 @@ export default function FeedScreen() {
     >
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.postid}
+        keyExtractor={(item) => item.postId}
 
         renderItem={({ item }) => (
           <PostCard
             post={item}
-            onOpen={() => openPost(item.postid)}
+            onOpen={() => openPost(item.postId)}
           />
         )}
 

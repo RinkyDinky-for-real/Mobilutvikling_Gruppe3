@@ -2,8 +2,9 @@ import { z } from 'zod';
 
 
 export const postSchema = z.object({
-    postid: z.string(),
+    postId: z.string(),
     //userid: z.string(),
+    userName: z.string(),
     title: z.string(),
     content: z.string(),
     longitude: z.number(),

@@ -4,6 +4,7 @@ import { Alert, Pressable, StyleSheet, TextInput, Text, View } from 'react-nativ
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
 import { useAuth } from '@/utils/context';
+import { router } from 'expo-router';
 
 export default function LoginScreen() {
   const [userName, setUserName] = useState('');

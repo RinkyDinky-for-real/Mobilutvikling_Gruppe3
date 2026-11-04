@@ -1,7 +1,6 @@
 import { TypeOf, z } from 'zod';
 import { userSchema } from '@/utils/userSchema';
 import { User } from 'lucide-react-native';
-import  Data  from '../../assets/FakeUsers.json';
 
 
 export function createUserFromData(Data: any) {

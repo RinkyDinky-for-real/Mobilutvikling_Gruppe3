@@ -2,8 +2,8 @@ import { sendRequest} from "@/databaseAPI";
 
 
 
-export async function fetchSinglePost(PostId: string){
-    const response = await sendRequest('getpost', 'GET', { postid: PostId });
+export async function fetchSinglePost(postId: string){
+    const response = await sendRequest('getpost', 'GET', { postid: postId });
     if (!response.ok) {
         throw new Error(`Failed to fetch post: ${response.status}`);
     }

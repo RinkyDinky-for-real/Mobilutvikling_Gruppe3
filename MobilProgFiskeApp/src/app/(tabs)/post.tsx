@@ -59,7 +59,7 @@ async function fetchPostData() {
                 <View>
                     <Text>Title:{postData.title}</Text>
                     <Text>Date:{postData.date}</Text>
-                    <Text>User:{postData.userid}</Text>
+                    <Text>User:{postData.userName}</Text>
                     <Text>Content:{postData.content}</Text>
 
                 </View>

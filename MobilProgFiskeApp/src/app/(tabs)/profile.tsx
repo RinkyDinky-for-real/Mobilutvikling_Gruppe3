@@ -105,7 +105,7 @@ export default function ProfileScreen() {
           setLoading(true);
           setError(null);
   
-          const fetchedPosts = await fetchRandomPosts(20);
+          const fetchedPosts = await fetchAllPostsFromUser(userId!);
   
           console.log("API Response:", fetchedPosts);
   
@@ -149,7 +149,7 @@ export default function ProfileScreen() {
 
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+
         <ProfileHeader
             username={profileData.username}
             profilePicture="https://picsum.photos/200"
@@ -168,12 +168,12 @@ export default function ProfileScreen() {
         />
         <FlatList
                 data={posts}
-                keyExtractor={(item) => item.postid}
+                keyExtractor={(item) => item.postId}
         
                 renderItem={({ item }) => (
                   <PostCard
                     post={item}
-                    onOpen={() => openPost(item.postid)}
+                    onOpen={() => openPost(item.postId)}
                   />
                 )}
         
@@ -200,7 +200,7 @@ export default function ProfileScreen() {
                 contentContainerStyle={styles.listContent}
                 showsVerticalScrollIndicator={false}
               />
-        </ScrollView>
+        
         <Modal
           visible={editVisible}
           backdropColor={colors.background}

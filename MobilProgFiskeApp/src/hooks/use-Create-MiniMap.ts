@@ -1,4 +1,4 @@
-import data from '../../assets/FakePosts.json';
+import { fetchAllPostsFromUser, fetchSinglePost } from './use-Fetch-Posts';
 
 type MiniMap = {
   id: string;
@@ -6,27 +6,27 @@ type MiniMap = {
   userid: string;
 };
 
-export function createMiniMapsFromPosts(userid: string) {
-    const posts = data.posts.filter(post => post.UserId === userid);
+export async function createMiniMapsFromPosts(userId: string) {
+    const posts = await fetchAllPostsFromUser(userId);
     const createdPosts: MiniMap[] = [];
 
     for (const post of posts) {
         createdPosts.push({
-            id: post.PostId,
-            longlat: [post.Longtitude, post.Latitude],
-            userid: post.UserId
+            id: post.postId,
+            longlat: [post.longtitude, post.latitude],
+            userid: post.userId
         });
     }
     return(createdPosts);
 }
 
-export function createSingularMiniMapFromUserPost(userid: string, postid: string) {
-    const post = data.posts.find(post => post.UserId === userid && post.PostId === postid);
+export async function createSingularMiniMapFromUserPost( postId: string) {
+    const post = await fetchSinglePost(postId);
     if (post) {
         const miniMap: MiniMap = {
-            id: post.PostId,
-            longlat: [post.Longtitude, post.Latitude],
-            userid: post.UserId
+            id: post.postId,
+            longlat: [post.longitude, post.latitude],
+            userid: post.userId
         };
         return miniMap;
     } else {
