@@ -1,20 +1,26 @@
-import { useContext } from "react";
-import AuthContextProvider, { AuthContext } from "../utils/context";
-import { Redirect } from "expo-router";
+import { Redirect } from 'expo-router';
+import { View } from 'react-native';
+import { useAuth } from '@/utils/context';
 
-function Checker() {
-    
-    const { userId, setUserId } = useContext(AuthContext)
-    
-    let path = ""
-    if (userId) {
-        path = "./(tabs)"
-    }
-    else {
-        path = "./login"
-    }
-    return (<Redirect href = {path}></Redirect>)
-}
-export default function Main() {
-    return(<AuthContextProvider><Checker></Checker></AuthContextProvider>)
+export default function Index() {
+  const { userId, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+      </View>
+    );
+  }
+
+  return (
+    <Redirect
+      href={userId ? '/(tabs)/feed' : '/login'}
+    />
+  );
 }
