@@ -89,13 +89,13 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT Title, Content, latitude, longtitude, Date from Posts where userId = ? order by Date desc"
+			query = "SELECT Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
 			value = userId
 		}
 		else if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
 
-			query = "select Title, Content, latitude, longtitude, Date from Posts where UserId != ? order by random() limit ?"
+			query = "SELECT Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
 			value = userId
 			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
 			return (Response.json(results))
