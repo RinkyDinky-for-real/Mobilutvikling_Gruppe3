@@ -32,7 +32,7 @@ export default {
 		let shouldSend = false
 		const userId = request.headers.get("userId")
 		if (userId) {
-			let { results } = await env.mobile_programming.prepare("select * from Accounts where AccountId = ?").bind(userId).run()
+			let { results } = await env.mobile_programming.prepare("select * from users where userId = ?").bind(userId).run()
 			if (results.length == 0) {
 				return (new Response("Invalid user id", {"status": 400}))
 			}
@@ -40,7 +40,7 @@ export default {
 		if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
 
-			query = "SELECT postid, Accounts.username, title, content, latitude, longitude, date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
+			query = "SELECT postid, users.username, title, content, latitude, longitude, date from posts join users on users.userId  = posts.UserId where posts.UserId != ? order by random() limit ?"
 			value = "0"
 			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
 			return (Response.json(results))
@@ -48,7 +48,7 @@ export default {
 
 		if (pathname === "/api/v1/user/getuserid" && request.headers.get("userName") && request.headers.get("passwordHash") && request.method === "GET") {
 			const h = await  hash(request.headers.get("passwordHash"))
-			const { results } = await env.mobile_programming.prepare("select AccountId from Accounts where UserName = ? and PasswordHash = ?").bind(request.headers.get("userName"), h).run()
+			const { results } = await env.mobile_programming.prepare("select userId from users where userName = ? and PasswordHash = ?").bind(request.headers.get("userName"), h).run()
 			if (results.length == 0) {
 				return (new Response("User not found", { "status": 404 }))
 			}
@@ -58,27 +58,27 @@ export default {
 		}
 		if (pathname === "/api/v1/user" && request.method === "PATCH" && request.headers.get("userId")) {
 			if (request.headers.get("userName")) {
-				await env.mobile_programming.prepare("update Accounts set UserName =  ? where AccountId = ? limit 1").bind(request.headers.get("userName"), request.headers.get("userId")).run()
+				await env.mobile_programming.prepare("update users set userName =  ? where userId = ? limit 1").bind(request.headers.get("userName"), request.headers.get("userId")).run()
 			}
 			if (request.headers.get("passwordHash")) {
 				const h = await hash(request.headers.get("passwordHash"))
-				await env.mobile_programming.prepare("update Accounts set PasswordHash = ? where AccountId = ? limit 1").bind(h, request.headers.get("userId")).run()
+				await env.mobile_programming.prepare("update users set PasswordHash = ? where userId = ? limit 1").bind(h, request.headers.get("userId")).run()
 			}
 			if (request.headers.get("favoriteFishingPlace") != null) {
-				await env.mobile_programming.prepare("update Accounts set FavoritePlace = ? where AccountId = ?").bind(request.headers.get("favoriteFishingPlace"), request.headers.get("userId")).run()
+				await env.mobile_programming.prepare("update users set favoritePlace = ? where userId = ?").bind(request.headers.get("favoriteFishingPlace"), request.headers.get("userId")).run()
 			}
 			if (request.headers.get("favoriteFish") != null) {
-				await env.mobile_programming.prepare("update Accounts set FavoriteFish = ? where AccountId = ?").bind(request.headers.get("favoriteFish"), request.headers.get("userId")).run()
+				await env.mobile_programming.prepare("update users set favoriteFish = ? where userId = ?").bind(request.headers.get("favoriteFish"), request.headers.get("userId")).run()
 			}
 			if (request.headers.get("favoriteFishingMethod") != null) {
-				await env.mobile_programming.prepare("update Accounts set FavoriteFishingMethod = ? where AccountId = ?").bind(request.headers.get("favoriteFishingMethod"), request.headers.get("userId")).run()
+				await env.mobile_programming.prepare("update users set favoriteFishingMethod = ? where userId = ?").bind(request.headers.get("favoriteFishingMethod"), request.headers.get("userId")).run()
 			}
 
 			return (new Response("User updated", { "status": 202 }))
 		}
 		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId") && request.headers.get("userId")) {
 			
-			const { results } = await env.mobile_programming.prepare("SELECT Accounts.UserName, Title, Content, latitude, longitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? and Accounts.AccountId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
+			const { results } = await env.mobile_programming.prepare("SELECT users.userName, title, datecontent, latitude, longitude, date from posts join users on users.userId  = posts.UserId where posts.UserId = ? and users.userId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
 			let status = 200
 			if (results.length == 0) {
 				status = 404
@@ -91,20 +91,20 @@ export default {
 
 		if (pathname === "/api/v1/user" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT UserName, FavoriteFishingMethod, FavoritePlace, FavoriteFish FROM Accounts where AccountId = ?"
+			query = "SELECT userName, favoriteFishingMethod, favoritePlace, favoriteFish FROM users where userId = ?"
 			value = userId;
 			potentialError = 404
 		}
 		else if (pathname === "/api/v1/post" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT Accounts.UserName, PostId, Title, Content, latitude, longitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
+			query = "SELECT users.userName, postId, title, datecontent, latitude, longitude, date from posts join users on users.userId  = posts.UserId where posts.UserId = ? order by date desc"
 			value = userId
 		}
 		else if (pathname == "/api/v1/user" && request.method == "POST") {
 			if (!(request.headers.get("userName") && request.headers.get("passwordHash"))) {
 				return (new Response("Missing Data", { "status": 400 }))
 			}
-			const { results } = await env.mobile_programming.prepare("select * from Accounts where userName = ?").bind(request.headers.get("userName")).run();
+			const { results } = await env.mobile_programming.prepare("select * from users where userName = ?").bind(request.headers.get("userName")).run();
 			if (results.length > 0) {
 				return (new Response("Duplicate username", { status: 409 }))
 			}
@@ -113,30 +113,30 @@ export default {
 			const h = await hash(request.headers.get("passwordHash"))
 			
 			
-			await env.mobile_programming.prepare("insert into Accounts (AccountId, UserName, PassWordHash, FavoriteFishingMethod, FavoritePlace, FavoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), h, ).run();
+			await env.mobile_programming.prepare("insert into users (userId, userName, titlepasswordHash, favoriteFishingMethod, favoritePlace, favoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), h, ).run();
 			return new Response(newId, { status: 201 })
 		}
 		else if (pathname === "/api/v1/user" && request.method === "DELETE") {
 			shouldSend = true
-			await env.mobile_programming.prepare("delete from Posts where UserId = ?").bind(userId).run()
-			query = "delete from Accounts where AccountId = ?"
+			await env.mobile_programming.prepare("delete from posts where UserId = ?").bind(userId).run()
+			query = "delete from users where userId = ?"
 			value = userId
 
 		}
 		else if (pathname === "/api/v1/post" && request.method === "POST") {
 			const headers = request.headers
 			if (!(headers.get("userId") && headers.get("title") && headers.get("content") && headers.get("latitude") && headers.get("longitude") && headers.get("date"))) {
-				return (new Response("Content missing", { "status": 400 }))
+				return (new Response("datecontent missing", { "status": 400 }))
 			}
 			let newId = crypto.randomUUID()
-			// Dates must be sent in so the most significant data is stored first in the string, e.g, year/month/day/hour/minit, so the sorting works.
+			// dates must be sent in so the most significant data is stored first in the string, e.g, year/month/day/hour/minit, so the sorting works.
 			try {
-				const { results} = await env.mobile_programming.prepare("insert into Posts (PostId, UserId, Title, Content, latitude, longitude, Date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longitude"), headers.get("date")).run()
+				const { results} = await env.mobile_programming.prepare("insert into posts (postId, UserId, title, datecontent, latitude, longitude, date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longitude"), headers.get("date")).run()
 			}
 			catch {
 				return (new Response("User not found", {"status": 400}))
 			}
-			//const { results } = env.mobile_programming.prepare("select * from Posts where PostId = ?").bind(newId)
+			//const { results } = env.mobile_programming.prepare("select * from posts where postId = ?").bind(newId)
 			//console.log(results)
 			//return (new Response(newId));
 			return (new Response(newId, {"status": 201}))
@@ -144,14 +144,14 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "DELETE" && request.headers.get("postId") && userId) {
 			shouldSend = true
-			query = "delete from Posts where PostId = ? and UserId = ?"
+			query = "delete from posts where postId = ? and UserId = ?"
 			value = request.headers.get("postId")
 			env.mobile_programming.prepare(query).bind(value, userId).run()
 			return(new Response(""))
 		}
 		else if (pathname === "/api/v1/user/count" && request.method === "GET") {
 			
-			const { results} = await env.mobile_programming.prepare("select count(AccountId) from Accounts").run()
+			const { results} = await env.mobile_programming.prepare("select count(userId) from users").run()
 			return(Response.json(results))
 		}
 		else {
