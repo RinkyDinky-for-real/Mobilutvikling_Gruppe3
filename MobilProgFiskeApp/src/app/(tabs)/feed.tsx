@@ -31,7 +31,7 @@ export default function FeedScreen() {
         setLoading(true);
         setError(null);
 
-        const fetchedPosts = await fetchRandomPosts(userId, 20);
+        const fetchedPosts = await fetchRandomPosts(20);
 
         console.log("API Response:", fetchedPosts);
 

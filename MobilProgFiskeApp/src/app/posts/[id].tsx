@@ -3,8 +3,6 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { colors } from '@/styles/global';
 
-import PostHeader from '@/components/postComponents/PostHeader';
-
 
 export default function PostDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();

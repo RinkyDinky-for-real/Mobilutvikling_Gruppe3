@@ -1,14 +1,8 @@
-import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, TextInput, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
-import { useState } from 'react';
 import { useAuth } from '@/utils/context';
 
 export default function LoginScreen() {
@@ -110,9 +104,9 @@ export default function LoginScreen() {
             disabled={busy}
             style={styles.primaryButton}
           >
-            <ThemedText type="code" style={styles.buttonText}>
+            <Text style={styles.buttonText}>
               {busy ? 'Logger inn...' : 'Logg inn'}
-            </ThemedText>
+            </Text>
           </Pressable>
 
           <Pressable onPress={()=> router.push('/register')}style={styles.secondaryButton}>

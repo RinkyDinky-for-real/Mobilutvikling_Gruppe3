@@ -1,16 +1,17 @@
 import { StyleSheet, ScrollView, Alert, Modal, View, Text, TextInput, Pressable, FlatList, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+
+import { postSchema, type Post } from "@/utils/postSchema"
 import ProfileHeader from "@/components/profileComponents/ProfileHeader";
 import { colors } from '@/styles/global';
 import ProfileStats from "@/components/profileComponents/ProfileStats";
 import ProfileInfo from "@/components/profileComponents/ProfileInfo";
-import RecentCatches from "@/components/profileComponents/RecentCatches";
 import { fetchUser } from "@/hooks/use-Fetch-User";
 import { EditUser } from "@/hooks/use-Edit-User";
-import { fetchAllPostsFromUser, fetchPostsCountFromUser } from "@/hooks/use-Fetch-Posts";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { fetchAllPostsFromUser, fetchPostsCountFromUser, fetchRandomPosts } from "@/hooks/use-Fetch-Posts";
+import PostCard from '@/components/postComponents/PostCard';
 import { useAuth } from "@/utils/context";
 
 export default function ProfileScreen() {
@@ -104,7 +105,7 @@ export default function ProfileScreen() {
           setLoading(true);
           setError(null);
   
-          const fetchedPosts = await fetchRandomPosts(userId, 20);
+          const fetchedPosts = await fetchRandomPosts(20);
   
           console.log("API Response:", fetchedPosts);
   
@@ -178,7 +179,7 @@ export default function ProfileScreen() {
         
                 ListHeaderComponent={
                   <Text style={styles.title}>
-                    Feed
+                    My posts
                   </Text>
                 }
         

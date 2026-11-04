@@ -10,24 +10,24 @@ export async function fetchSinglePost(PostId: string){
     return response.json();
 }
 
-export async function fetchAllPostsFromUser(AccountId: string){
-    const response = await sendRequest("post", "GET", { userId: AccountId });
+export async function fetchAllPostsFromUser(userId: string){
+    const response = await sendRequest("post", "GET", { userId: userId });
     if (!response.ok) {
         throw new Error(`Failed to fetch posts: ${response.status}`);
     }
     return response.json();
 }
 
-export async function fetchRandomPosts(AccountId: string, limit: number){
-    const response = await sendRequest("post/random", "GET", { userId: AccountId, limit: limit});
+export async function fetchRandomPosts(limit: number){
+    const response = await sendRequest("post/random", "GET", { limit: limit});
     if (!response.ok) {
         throw new Error(`Failed to fetch random posts: ${response.status}`);
     }
     return response.json();
 }
 
-export async function fetchPostsCountFromUser(AccountId: string){
-    const response = await fetchAllPostsFromUser(AccountId);
+export async function fetchPostsCountFromUser(userId: string){
+    const response = await fetchAllPostsFromUser(userId);
     return response.length;;
 }
 
