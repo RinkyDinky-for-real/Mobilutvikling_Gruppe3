@@ -78,7 +78,7 @@ export default {
 		}
 		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId") && request.headers.get("userId")) {
 			
-			const { results } = await env.mobile_programming.prepare("SELECT Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? and Accounts.AccountId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
+			const { results } = await env.mobile_programming.prepare("SELECT Accounts.UserName, Title, Content, latitude, longitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? and Accounts.AccountId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
 			let status = 200
 			if (results.length == 0) {
 				status = 404
@@ -97,7 +97,7 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT Accounts.UserName, PostId, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
+			query = "SELECT Accounts.UserName, PostId, Title, Content, latitude, longitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
 			value = userId
 		}
 		else if (pathname == "/api/v1/user" && request.method == "POST") {
@@ -125,13 +125,13 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "POST") {
 			const headers = request.headers
-			if (!(headers.get("userId") && headers.get("title") && headers.get("content") && headers.get("latitude") && headers.get("longtitude") && headers.get("date"))) {
+			if (!(headers.get("userId") && headers.get("title") && headers.get("content") && headers.get("latitude") && headers.get("longitude") && headers.get("date"))) {
 				return (new Response("Content missing", { "status": 400 }))
 			}
 			let newId = crypto.randomUUID()
 			// Dates must be sent in so the most significant data is stored first in the string, e.g, year/month/day/hour/minit, so the sorting works.
 			try {
-				const { results} = await env.mobile_programming.prepare("insert into Posts (PostId, UserId, Title, Content, latitude, longtitude, Date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longtitude"), headers.get("date")).run()
+				const { results} = await env.mobile_programming.prepare("insert into Posts (PostId, UserId, Title, Content, latitude, longitude, Date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longitude"), headers.get("date")).run()
 			}
 			catch {
 				return (new Response("User not found", {"status": 400}))
