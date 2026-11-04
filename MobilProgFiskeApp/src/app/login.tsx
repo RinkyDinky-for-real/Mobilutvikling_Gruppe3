@@ -2,6 +2,10 @@ import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useContext, useState } from 'react';
+import { Alert, Pressable, StyleSheet, TextInput, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
 import { useState } from 'react';
@@ -51,41 +55,41 @@ export default function LoginScreen() {
 
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.card}>
-          <ThemedText type="title" style={styles.title}>
-            Logg inn
-          </ThemedText>
+        <View style={styles.card}>
+          <Text style={styles.title}>
+            Log in
+          </Text>
 
-          <ThemedText type="small" style={styles.subtitle}>
-            Velkommen tilbake
-          </ThemedText>
+          <Text style={styles.subtitle}>
+            Welcome Back
+          </Text>
 
-          <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small" style={styles.inputLabel}>
-              Brukernavn
-            </ThemedText>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>
+              Username
+            </Text>
             <TextInput
               value={userName}
               onChangeText={setUserName}
-              placeholder="brukernavn"
+              placeholder="Enter your username"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
               keyboardType="default"
               style={styles.input}
             />
-          </ThemedView>
+          </View>
 
-          <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small" style={styles.inputLabel}>
-              Passord
-            </ThemedText>
-            <ThemedView style={styles.passwordRow}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>
+              Password
+            </Text>
+            <View style={styles.passwordRow}>
               <TextInput
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Skriv inn passord"
+                placeholder="Enter your passord"
                 placeholderTextColor="#6b7280"
                 secureTextEntry={!showPassword}
                 style={[styles.input, styles.passwordInput]}
@@ -94,12 +98,12 @@ export default function LoginScreen() {
                 onPress={() => setShowPassword((current) => !current)}
                 style={styles.toggleButton}
               >
-                <ThemedText type="small" style={styles.inputLabel}>
-                  {showPassword ? 'Skjul' : 'Vis'}
-                </ThemedText>
+                <Text style={styles.inputLabel}>
+                  {showPassword ? 'Hide' : 'Show'}
+                </Text>
               </Pressable>
-            </ThemedView>
-          </ThemedView>
+            </View>
+          </View>
 
           <Pressable
             onPress={handleLogin}
@@ -111,12 +115,12 @@ export default function LoginScreen() {
             </ThemedText>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton}>
-            <ThemedText type="small">Glemt passord?</ThemedText>
+          <Pressable onPress={()=> router.push('/register')}style={styles.secondaryButton}>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
-        </ThemedView>
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -146,6 +150,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
+    fontSize: 48,
+    fontWeight: '400',
     textAlign: 'center',
     marginBottom: Spacing.one,
   },

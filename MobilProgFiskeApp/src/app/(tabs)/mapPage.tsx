@@ -1,7 +1,5 @@
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Camera, Map } from '@maplibre/maplibre-react-native';
-import { ImageSourcePropType, StyleSheet, View } from 'react-native';
+import { ImageSourcePropType, StyleSheet, View, Text } from 'react-native';
 import {createMarkersFromUserPost} from '@/hooks/use-Create-Marker';
 import { spotmarker } from '@/components/mapComponents/spot-marker';
 import React, { useEffect, useState } from 'react';
@@ -34,7 +32,6 @@ export default function HomeScreen() {
   useFocusEffect(
   React.useCallback(() => {
     let cancelled = false;
-    console.log('Screen is now visible');
     loadMarkers();
     return () => {
       cancelled = true;
@@ -51,17 +48,16 @@ export default function HomeScreen() {
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
           {markers.map((marker) => (
           <React.Fragment key={marker.id}>
-            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName, marker.RedirectLink)}
+            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName)}
           </React.Fragment>
           ))}
       </Map>
 
-      <ThemedView type="text" style={styles.text}>
-        <ThemedText type="title" style={{ textAlign: 'center' }}>
+      <View style={styles.text}>
+        <Text style={styles.title}>
           Fishing App
-        </ThemedText>
-      </ThemedView>
-
+        </Text>
+      </View>
     </View>
 
   );
@@ -86,5 +82,9 @@ const styles = StyleSheet.create({
   backgroundColor: '#f2f2f2',
   alignItems: 'center',
   justifyContent: 'center',
+  },
+  title: {
+    fontSize: 48,
+    fontWeight: 'bold',
   },
 });
