@@ -18,9 +18,9 @@ export default function Index() {
     );
   }
 
-  return (
-    <Redirect
-      href={userId ? '/(tabs)/feed' : '/login'}
-    />
-  );
+  if (!userId) {
+    return <Redirect href="/login" />;
+  } else {
+    return <Redirect href="/(tabs)/feed" />;
+  }
 }

@@ -12,7 +12,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-
   const { signIn } = useAuth();
   const [busy, setBusy] = useState(false);
 
@@ -32,10 +31,10 @@ export default function LoginScreen() {
     setBusy(true);
 
     try {
-      // Step 1: Verify credentials using the backend
+      // Verify credentials using the backend
       const accountId = await login(userName.trim(), password);
 
-      // Step 2: Create and save the local session
+      // Create and save the local session
       await signIn(accountId);
 
       // Expo Router will automatically update the navigation

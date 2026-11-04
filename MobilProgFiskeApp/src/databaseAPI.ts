@@ -13,8 +13,21 @@ export async function sendRequest(
     stringHeaders[key] = String(value);
   }
 
-  return fetch(baseUrl + endPoint, {
+  const response = await fetch(baseUrl + endPoint, {
     method,
     headers: stringHeaders,
   });
+
+  if (!response.ok) {
+    const errorMessage = await response.clone().text();
+
+    console.error('API request failed:', {
+      endpoint: endPoint,
+      method,
+      status: response.status,
+      message: errorMessage,
+    });
+  }
+
+  return response;
 }

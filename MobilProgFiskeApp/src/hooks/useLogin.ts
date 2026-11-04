@@ -1,5 +1,4 @@
 
-import * as Crypto from 'expo-crypto';
 import { sendRequest } from '../databaseAPI';
 
 export async function login(
@@ -7,33 +6,30 @@ export async function login(
   password: string
 ): Promise<string> {
 
-  const passwordHash = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    password
-  );
+  // Check that the required fields aren't empty
+  if (!userName.trim() || !password) {
+    throw new Error('Username or password is missing');
+  }
 
   const response = await sendRequest(
     'user/getuserid',
     'GET',
     {
-      userName,
-      passwordHash,
+      userName: userName.trim(),
+      passwordHash: password,
     }
   );
 
   if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error('Incorrect username or password');
-    }
-
     throw new Error(`Login failed: ${response.status}`);
   }
 
-  const data: unknown = await response.json();
+  const data = await response.json();
 
   if (
     !Array.isArray(data) ||
-    typeof data[0]?.AccountId !== 'string'
+    !data[0] ||
+    typeof data[0].AccountId !== 'string'
   ) {
     throw new Error('Unexpected login response');
   }

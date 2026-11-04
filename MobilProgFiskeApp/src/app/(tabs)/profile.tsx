@@ -11,9 +11,10 @@ import { EditUser } from "@/hooks/use-Edit-User";
 import { fetchAllPostsFromUser, fetchPostsCountFromUser } from "@/hooks/use-Fetch-Posts";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useAuth } from "@/utils/context";
 
 export default function ProfileScreen() {
-  const userId = "1133794227705107";
+  const { userId, signOut } = useAuth();
 
   const [profileData, setProfileData] = useState({
     username: "Loading...",
@@ -44,7 +45,7 @@ export default function ProfileScreen() {
   setSaving(true);
   try {
     await EditUser(
-      userId,
+      userId!, // Might cause issues if userId is undefined, but we are assuming it's always defined when this function is called
       undefined, // username
       undefined,
       draft.fishingStyle,
@@ -63,24 +64,21 @@ export default function ProfileScreen() {
 }
 
   async function loadProfile() {
-    try {
-      const userId = "1133794227705107";
-      const userResponse = await fetchUser(userId);
-      const user = Array.isArray(userResponse) ? userResponse[0] : userResponse;
+    if (!userId) return;
 
-      if (!user) {
-        throw new Error("User not found");
-      }
+    try {
+      const userResponse = await fetchUser(userId);
+
       console.log("User Response:", userResponse);
       const postsCountResponse = await fetchPostsCountFromUser(userId);
       const postsResponse = await fetchAllPostsFromUser(userId);
 
       setProfileData({
-        username: user.UserName,
+        username: userResponse.UserName,
         spots: postsCountResponse,
-        favoriteFish: user.FavoriteFish,
-        favoriteSpot: user.FavoritePlace,
-        fishingStyle: user.FavoriteFishingMethod,
+        favoriteFish: userResponse.FavoriteFish,
+        favoriteSpot: userResponse.FavoritePlace,
+        fishingStyle: userResponse.FavoriteFishingMethod,
         posts: postsResponse,
       });
   
@@ -93,7 +91,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     void loadProfile();
-  }, []);
+  }, [userId]);
 
   return (
 
@@ -114,6 +112,7 @@ export default function ProfileScreen() {
           favoriteSpot={profileData.favoriteSpot}
           fishingStyle={profileData.fishingStyle}
           onEdit={openEditForm}
+          signOut={signOut}
         />
         <RecentCatches/>
         </ScrollView>
