@@ -8,6 +8,9 @@ async function hash(value) {
 	}
 	return(hashArray.map(mapFunction).join(""))
 }
+
+
+
 // The database can be accessed on the following URL: https://mobile-programming.emilhesmyr.workers.dev/path/to/endpoint.
 
 
@@ -36,8 +39,8 @@ export default {
 		}
 
 		if (pathname === "/api/v1/user/getuserid" && request.headers.get("userName") && request.headers.get("passwordHash") && request.method === "GET") {
-			
-			const { results } = await env.mobile_programming.prepare("select AccountId from Accounts where UserName = ? and PasswordHash = ?").bind(request.headers.get("userName"), request.headers.get("passwordHash")).run()
+			const h = await  hash(request.headers.get("passwordHash"))
+			const { results } = await env.mobile_programming.prepare("select AccountId from Accounts where UserName = ? and PasswordHash = ?").bind(request.headers.get("userName"), h).run()
 			if (results.length == 0) {
 				return (new Response("User not found", { "status": 404 }))
 			}
@@ -67,7 +70,7 @@ export default {
 		}
 		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId")) {
 			
-			const { results } = await env.mobile_programming.prepare("select * from Posts where PostId = ?").bind(request.headers.get("postId")).run()
+			const { results } = await env.mobile_programming.prepare("select Title, Content, latitude, longtitude, Date from Posts where PostId = ?").bind(request.headers.get("postId")).run()
 			let status = 200
 			if (results.length == 0) {
 				status = 404
@@ -80,19 +83,19 @@ export default {
 
 		if (pathname === "/api/v1/user" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT * FROM Accounts where AccountId = ?"
+			query = "SELECT UserName, FavoriteFishingMethod, FavoritePlace, FavoriteFish FROM Accounts where AccountId = ?"
 			value = userId;
 			potentialError = 404
 		}
 		else if (pathname === "/api/v1/post" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT * from Posts where userId = ? order by Date desc"
+			query = "SELECT Title, Content, latitude, longtitude, Date from Posts where userId = ? order by Date desc"
 			value = userId
 		}
 		else if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
 
-			query = "select * from Posts where UserId != ? order by random() limit ?"
+			query = "select Title, Content, latitude, longtitude, Date from Posts where UserId != ? order by random() limit ?"
 			value = userId
 			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
 			return (Response.json(results))
@@ -105,7 +108,7 @@ export default {
 			if (results.length > 0) {
 				return (new Response("Duplicate username", { status: 409 }))
 			}
-			const newId = String(Math.floor(Math.random() * 1000000000000000) + 1000000000000000)
+			const newId = crypto.randomUUID()
 			let res = null
 			const h = await hash(request.headers.get("passwordHash"))
 			
@@ -125,7 +128,7 @@ export default {
 			if (!(headers.get("userId") && headers.get("title") && headers.get("content") && headers.get("latitude") && headers.get("longtitude") && headers.get("date"))) {
 				return (new Response("Content missing", { "status": 400 }))
 			}
-			let newId = String(Math.floor(Math.random() * 1000000000000000) + 1000000000000000)
+			let newId = crypto.randomUUID()
 			// Dates must be sent in so the most significant data is stored first in the string, e.g, year/month/day/hour/minit, so the sorting works.
 			try {
 				const { results} = await env.mobile_programming.prepare("insert into Posts (PostId, UserId, Title, Content, latitude, longtitude, Date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longtitude"), headers.get("date")).run()
