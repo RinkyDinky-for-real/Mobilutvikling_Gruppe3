@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { UploadPost } from "@/hooks/use-Upload-Post";
-import { ThemedView } from "@/components/themed-view";
 import { Camera, Map } from '@maplibre/maplibre-react-native';
-import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 
 export default function CreatePostScreen() {
@@ -42,12 +40,12 @@ export default function CreatePostScreen() {
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.card}> 
-        <ThemedText type="title" style={{ textAlign: 'center' }}>
+    <View style={styles.container}>
+      <View style={styles.card}> 
+        <Text style={{ textAlign: 'center' }}>
           Post
-        </ThemedText>
-        <ThemedView>
+        </Text>
+        <View>
           <Text>Choose point on map</Text>
           <Map style={styles.map}  mapStyle="https://tiles.openfreemap.org/styles/liberty" 
           onPress={(event) => { 
@@ -60,7 +58,7 @@ export default function CreatePostScreen() {
           </Map>
           <Text>Longitude: {longitude}</Text>
             <Text>Latitude: {latitude} </Text>
-        </ThemedView>
+        </View>
         <TextInput style={styles.input}
           value={title}
           onChangeText={setTitle}
@@ -76,12 +74,12 @@ export default function CreatePostScreen() {
           accessibilityLabel="Content"
         />
         <Pressable onPress={() => handleUploadPost(testUserId, title, content, latitude, longitude)} disabled={uploading}>
-          <ThemedView style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
+          <View style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
               <Text>{uploaded ? "Uploaded!": uploading ? "Uploading..." : "Post"}</Text>
-          </ThemedView>
+          </View>
         </Pressable>
-      </ThemedView>
-    </ThemedView>
+      </View>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -113,6 +111,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
+    fontSize: 48,
+    fontWeight: 400,
     textAlign: 'center',
     marginBottom: Spacing.one,
   },

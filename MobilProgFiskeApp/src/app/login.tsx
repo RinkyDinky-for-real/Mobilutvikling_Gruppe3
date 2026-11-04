@@ -1,9 +1,7 @@
 import { useContext, useState } from 'react';
-import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
+import { Alert, Pressable, StyleSheet, TextInput, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
 import { AuthContext } from '../utils/context';
@@ -45,21 +43,21 @@ export default function LoginScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.card}>
-          <ThemedText type="title" style={styles.title}>
+        <View style={styles.card}>
+          <Text style={styles.title}>
             Log in
-          </ThemedText>
+          </Text>
 
-          <ThemedText type="small" style={styles.subtitle}>
+          <Text style={styles.subtitle}>
             Welcome Back
-          </ThemedText>
+          </Text>
 
-          <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small" style={styles.inputLabel}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>
               Username
-            </ThemedText>
+            </Text>
             <TextInput
               value={userName}
               onChangeText={setUserName}
@@ -69,13 +67,13 @@ export default function LoginScreen() {
               keyboardType="default"
               style={styles.input}
             />
-          </ThemedView>
+          </View>
 
-          <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small" style={styles.inputLabel}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>
               Password
-            </ThemedText>
-            <ThemedView style={styles.passwordRow}>
+            </Text>
+            <View style={styles.passwordRow}>
               <TextInput
                 value={password}
                 onChangeText={setPassword}
@@ -88,25 +86,25 @@ export default function LoginScreen() {
                 onPress={() => setShowPassword((current) => !current)}
                 style={styles.toggleButton}
               >
-                <ThemedText type="small" style={styles.inputLabel}>
+                <Text style={styles.inputLabel}>
                   {showPassword ? 'Hide' : 'Show'}
-                </ThemedText>
+                </Text>
               </Pressable>
-            </ThemedView>
-          </ThemedView>
+            </View>
+          </View>
 
           <Pressable onPress={handleLogin} style={styles.primaryButton}>
-            <ThemedText type="code" style={styles.buttonText}>
+            <Text style={styles.buttonText}>
               Log in
-            </ThemedText>
+            </Text>
           </Pressable>
 
           <Pressable onPress={()=> router.push('/register')}style={styles.secondaryButton}>
-            <ThemedText type="small">Sign Up</ThemedText>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
-        </ThemedView>
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -136,6 +134,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
+    fontSize: 48,
+    fontWeight: '400',
     textAlign: 'center',
     marginBottom: Spacing.one,
   },

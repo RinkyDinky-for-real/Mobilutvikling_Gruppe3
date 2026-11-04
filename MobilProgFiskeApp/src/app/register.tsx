@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, TextInput, View, Text, } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { registerSchema } from '@/utils/register-schema';
 import type { registeredUser } from '@/utils/register-schema';
@@ -130,7 +128,7 @@ export default function RegisterScreen() {
               onPress={() => router.replace('/')}
               style={styles.secondaryButton}
             >
-              <Text style={styles.secondaryButtonText}>
+              <Text style={styles.buttonText}>
                 Already have an account? Log in
               </Text>
             </Pressable>
@@ -241,9 +239,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.two,
     marginTop: Spacing.one,
-  },
-  secondaryButtonText: {
-    color: '#ffffff',
-    textAlign: 'center',
   },
 });
