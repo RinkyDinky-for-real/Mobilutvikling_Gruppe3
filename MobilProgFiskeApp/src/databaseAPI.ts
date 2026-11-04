@@ -10,6 +10,7 @@ export async function sendRequest(endPoint: string, method: string, headers: any
     }
     catch (error){
         console.log(error)
+        throw error;
     }
     
 }

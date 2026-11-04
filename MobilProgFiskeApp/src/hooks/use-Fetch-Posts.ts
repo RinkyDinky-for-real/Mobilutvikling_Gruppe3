@@ -26,5 +26,9 @@ export async function fetchRandomPosts(AccountId: string, limit: number){
     return response.json();
 }
 
+export async function fetchPostsCountFromUser(AccountId: string){
+    const response = await fetchAllPostsFromUser(AccountId);
+    return response.length;;
+}
 
     
