@@ -1,48 +1,55 @@
-import { useContext, useState } from 'react';
 import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as SecureStore from 'expo-secure-store';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
-import { AuthContext } from '../utils/context';
-import { Route } from 'expo-router/build/Route';
-import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { useAuth } from '@/utils/context';
 
 export default function LoginScreen() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const auth = useContext(AuthContext);
-  const router = useRouter()
-
-  if (auth === null) {
-    throw new Error("av en eller annen grunn så må erroren være der");
-  }
-
-  const { setUserId } = auth;
 
 
+  const { signIn } = useAuth();
+  const [busy, setBusy] = useState(false);
+
+
+  
   const handleLogin = async () => {
-    
-    if (!userName || !password) {
-      Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
+    if (busy) return;
+
+    if (!userName.trim() || !password) {
+      Alert.alert(
+        'Mangler informasjon',
+        'Fyll inn brukernavn og passord.'
+      );
       return;
     }
 
-    Alert.alert('Logg inn', `Logger inn som ${userName}`);
-    const res = await login(userName, password);
-    console.log(res);
-    if (res.status != 200) {
-      Alert.alert("Error", "Enten brukernavnet eller passordet er feil")
-      return;
+    setBusy(true);
+
+    try {
+      // Step 1: Verify credentials using the backend
+      const accountId = await login(userName.trim(), password);
+
+      // Step 2: Create and save the local session
+      await signIn(accountId);
+
+      // Expo Router will automatically update the navigation
+
+    } catch (error) {
+      Alert.alert(
+        'Kunne ikke logge inn',
+        error instanceof Error ? error.message : 'Ukjent feil'
+      );
+    } finally {
+      setBusy(false);
     }
-    const id = await res.text();
-    setUserId(id);
-    SecureStore.setItem("userId", id)
-    router.navigate("/(tabs)/feed")
   };
+
 
   return (
     <ThemedView style={styles.container}>
@@ -95,9 +102,13 @@ export default function LoginScreen() {
             </ThemedView>
           </ThemedView>
 
-          <Pressable onPress={handleLogin} style={styles.primaryButton}>
+          <Pressable
+            onPress={handleLogin}
+            disabled={busy}
+            style={styles.primaryButton}
+          >
             <ThemedText type="code" style={styles.buttonText}>
-              Logg inn
+              {busy ? 'Logger inn...' : 'Logg inn'}
             </ThemedText>
           </Pressable>
 
