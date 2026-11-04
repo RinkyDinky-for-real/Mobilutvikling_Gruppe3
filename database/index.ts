@@ -37,6 +37,14 @@ export default {
 				return (new Response("Invalid user id", {"status": 400}))
 			}
 		}
+		if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
+			shouldSend = true
+
+			query = "SELECT PostId, Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
+			value = "0"
+			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
+			return (Response.json(results))
+		}
 
 		if (pathname === "/api/v1/user/getuserid" && request.headers.get("userName") && request.headers.get("passwordHash") && request.method === "GET") {
 			const h = await  hash(request.headers.get("passwordHash"))
@@ -91,14 +99,6 @@ export default {
 			shouldSend = true
 			query = "SELECT Accounts.UserName, PostId, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId = ? order by date desc"
 			value = userId
-		}
-		else if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
-			shouldSend = true
-
-			query = "SELECT PostId, Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
-			value = userId
-			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
-			return (Response.json(results))
 		}
 		else if (pathname == "/api/v1/user" && request.method == "POST") {
 			if (!(request.headers.get("userName") && request.headers.get("passwordHash"))) {
