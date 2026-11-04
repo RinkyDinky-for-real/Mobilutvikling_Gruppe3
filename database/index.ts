@@ -40,7 +40,7 @@ export default {
 		if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
 
-			query = "SELECT PostId, Accounts.UserName, Title, Content, latitude, longtitude, Date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
+			query = "SELECT postid, Accounts.username, title, content, latitude, longitude, date from Posts join Accounts on Accounts.AccountId  = Posts.UserId where Posts.UserId != ? order by random() limit ?"
 			value = "0"
 			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
 			return (Response.json(results))

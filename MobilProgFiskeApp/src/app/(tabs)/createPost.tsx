@@ -3,6 +3,9 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 
 import { UploadPost } from "@/hooks/use-Upload-Post";
 import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
+import type { Post } from "@/utils/postSchema";
+
+
 
 export default function CreatePostScreen() {
   const [uploading, setUploading] = useState(false);
@@ -11,6 +14,7 @@ export default function CreatePostScreen() {
   const [longitude, setLongitude] = useState(0);
   const [title, setTitle]= useState("")
   const [content, setContent]= useState("")
+
   const testUserId = '1133794227705107';
   
   async function handleUploadPost(testUserId: string, title: string, content: string, latitude: number, longitude: number) {
