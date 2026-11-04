@@ -27,7 +27,6 @@ export async function createMarkersFromUserPost(userid: string) {
             longlat: [post.longtitude, post.latitude],
             photolink: require('../../assets/images/photo1.jpg'),
             pointName: post.Title,
-            RedirectLink: "/feed"
         };
         createdPosts.push(newPost);
     }

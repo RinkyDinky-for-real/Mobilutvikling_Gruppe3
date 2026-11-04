@@ -48,7 +48,7 @@ export default function HomeScreen() {
           <Camera zoom={1} minZoom={1} maxZoom={20}/>
           {markers.map((marker) => (
           <React.Fragment key={marker.id}>
-            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName, marker.RedirectLink)}
+            {spotmarker(marker.id, marker.longlat, marker.photolink, marker.pointName)}
           </React.Fragment>
           ))}
       </Map>

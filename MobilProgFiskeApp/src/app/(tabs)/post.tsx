@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 
 
-export default function SinglePost(PostId: string) {
+export default function SinglePost() {
 const { id } = useLocalSearchParams<{ id: string }>();
 const [loading, setLoading] = useState(true);
 const [postData, setPostData] = useState<Post | null>(null);
@@ -46,8 +46,8 @@ async function fetchPostData() {
     }, [id]);
     
     if (loading) return <ActivityIndicator/>
-    if (loadFailed) return alert("Failed to load post data. Please try again later.");
-    if (!postData) return alert("Failed to load post data. Please try again later.");
+    if (loadFailed) return <Text>Failed to load post data. Please try again later.</Text>;
+    if (!postData) return <Text>Failed to load post data. Please try again later.</Text>;
 
     return (
         <SafeAreaProvider>
