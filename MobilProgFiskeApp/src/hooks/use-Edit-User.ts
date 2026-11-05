@@ -1,11 +1,11 @@
 import { sendRequest } from '@/databaseAPI';
 
 
-export async function EditUser( userId: string ,username?: string, PassWordHash?: string, FavoriteFishingMethod?: string, favoriteFishingPlace?: string, FavoriteFish?: string){
+export async function EditUser( userId: string ,username?: string, passwordHash?: string, FavoriteFishingMethod?: string, favoriteFishingPlace?: string, FavoriteFish?: string){
     try{
         const headers: Record<string, string> = { userId };
             if (username !== undefined) headers.username = username;
-            if (PassWordHash !== undefined) headers.PassWordHash = PassWordHash;
+            if (passwordHash !== undefined) headers.passwordHash = passwordHash;
             if (FavoriteFishingMethod !== undefined) headers.FavoriteFishingMethod = FavoriteFishingMethod;
             if (favoriteFishingPlace !== undefined) headers.favoriteFishingPlace = favoriteFishingPlace;
             if (FavoriteFish !== undefined) headers.FavoriteFish = FavoriteFish;

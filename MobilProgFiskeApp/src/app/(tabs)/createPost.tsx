@@ -4,6 +4,7 @@ import { UploadPost } from "@/hooks/use-Upload-Post";
 import { Camera, Map } from '@maplibre/maplibre-react-native';
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import type { Post } from "@/utils/postSchema";
+import { useAuth } from "@/utils/context";
 
 
 
@@ -14,17 +15,16 @@ export default function CreatePostScreen() {
   const [longitude, setLongitude] = useState(0);
   const [title, setTitle]= useState("")
   const [content, setContent]= useState("")
-
-  const testUserId = '1133794227705107';
+  const { userId, } = useAuth();
   
-  async function handleUploadPost(testUserId: string, title: string, content: string, latitude: number, longitude: number) {
+  async function handleUploadPost(userId: string, title: string, content: string, latitude: number, longitude: number) {
     const date = new Date().toISOString()
     setUploading(true);
 
     try {
-
+      console.log("Uploading post with data:", { userId, title, content, latitude, longitude, date });
       const response = await UploadPost(
-        testUserId,
+        userId,
         title,
         content,
         latitude,
@@ -77,7 +77,11 @@ export default function CreatePostScreen() {
           placeholder="Write a short description"
           accessibilityLabel="Content"
         />
-        <Pressable onPress={() => handleUploadPost(testUserId, title, content, latitude, longitude)} disabled={uploading}>
+        <Pressable onPress={() => {
+          if (!userId) {
+          Alert.alert("Not signed in", "Please sign in before creating a post.");
+          return; 
+      } handleUploadPost(userId, title, content, latitude, longitude)}} disabled={uploading}>
           <View style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
               <Text>{uploaded ? "Uploaded!": uploading ? "Uploading..." : "Post"}</Text>
           </View>

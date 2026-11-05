@@ -72,17 +72,21 @@ export default function ProfileScreen() {
 
     try {
       const userResponse = await fetchUser(userId);
-
+      const user = Array.isArray(userResponse) ? userResponse[0] : userResponse;
       console.log("User Response:", userResponse);
       const postsCountResponse = await fetchPostsCountFromUser(userId);
       const postsResponse = await fetchAllPostsFromUser(userId);
 
+      if (!user) {
+      throw new Error("User not found");
+      }
+
       setProfileData({
-        username: userResponse.UserName,
+        username: user.userName,
         spots: postsCountResponse,
-        favoriteFish: userResponse.FavoriteFish,
-        favoriteSpot: userResponse.FavoritePlace,
-        fishingStyle: userResponse.FavoriteFishingMethod,
+        favoriteFish: user.favoriteFish,
+        favoriteSpot: user.favoritePlace,
+        fishingStyle: user.favoriteFishingMethod,
         posts: postsResponse,
       });
   
@@ -98,46 +102,42 @@ export default function ProfileScreen() {
   }, [userId]);
 
   useEffect(() => {
-      let cancelled = false;
-  
-      async function loadPosts() {
-        try {
-          setLoading(true);
-          setError(null);
-  
-          const fetchedPosts = await fetchAllPostsFromUser(userId!);
-  
-          console.log("API Response:", fetchedPosts);
-  
-          const result = postSchema.array().safeParse(fetchedPosts);
-  
-          if (!result.success) {
-            console.error("Invalid post data:", result.error);
-            throw new Error("Invalid API response format");
-          }
-  
-          if (!cancelled) {
-            setPosts(result.data);
-          }
-        } catch (err) {
-          console.error("Failed to load posts:", err);
-  
-          if (!cancelled) {
-            setError("Could not load posts.");
-          }
-        } finally {
-          if (!cancelled) {
-            setLoading(false);
-          }
-        }
+  if (!userId) {
+    setPosts([]);
+    setLoading(false);
+    return;
+  }
+  const currentUserId = userId;
+  let cancelled = false;
+
+  async function loadPosts() {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const fetchedPosts = await fetchAllPostsFromUser(currentUserId);
+      const result = postSchema.array().safeParse(fetchedPosts);
+
+      if (!result.success) {
+        console.error("Invalid post data:", result.error);
+        throw new Error("Invalid API response format");
       }
-  
-      loadPosts();
-  
-      return () => {
-        cancelled = true;
-      };
-    }, [posts]);
+
+      if (!cancelled) setPosts(result.data);
+    } catch (err) {
+      console.error("Failed to load posts:", err);
+      if (!cancelled) setError("Could not load posts.");
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  }
+
+  void loadPosts();
+
+  return () => {
+    cancelled = true;
+  };
+  }, [userId]);
 
     function openPost(postId: string) {
         router.push({

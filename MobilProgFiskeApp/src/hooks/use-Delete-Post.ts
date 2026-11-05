@@ -1,11 +1,11 @@
 import { sendRequest } from '../databaseAPI'
 
 
-export async function DeletePost(postid: string) {
+export async function DeletePost(postId: string) {
     
     try{
         console.log('Deleting post')
-        const response = await sendRequest("post", "DELETE", {postid});
+        const response = await sendRequest("post", "DELETE", {postId});
     if (!response.ok) {
   const details = await response.text();
   throw new Error(
