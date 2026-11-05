@@ -1,0 +1,8 @@
+{ "users": [
+    {
+        "UserId": "user1",
+        "Username": "JohnDoe",
+        "PasswordHash": "hashedpassword1"
+    }
+]    
+}

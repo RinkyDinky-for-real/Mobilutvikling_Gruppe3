@@ -1,18 +1,33 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { Stack } from 'expo-router';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import AuthContextProvider, { useAuth } from '@/utils/context';
 
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <AuthContextProvider>
+      <RootNavigator />
+    </AuthContextProvider>
+  );
+}
+
+function RootNavigator() {
+  const { userId } = useAuth();
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+
+      <Stack.Screen name="index" />
+
+      <Stack.Protected guard={!!userId}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="posts/[id]" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!userId}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+      </Stack.Protected>
+
+    </Stack>
   );
 }
