@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { registerSchema } from '@/utils/register-schema';
 import type { registeredUser } from '@/utils/register-schema';
+import { UploadUser } from '@/hooks/use-Upload-User';
 
 export default function RegisterScreen() {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ export default function RegisterScreen() {
   const [errors, setErrors] = useState<Partial<Record<keyof registeredUser, string>>>({});
   const router = useRouter();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const result = registerSchema.safeParse({ username: username.trim(), password });
     if (!result.success) {
       setErrors({
@@ -21,18 +22,21 @@ export default function RegisterScreen() {
         password: result.error.issues.find((issue) => issue.path[0] === 'password')?.message,
       });
       return;
-
-      
     }
 
     
     setErrors({});
-
-    Alert.alert(
-      'User Registered:',
-      `Username: ${username}\nPassword: ${password}`,
-      [{ text: 'Go to login', onPress: () => router.replace('/') }],
-    );
+    try {
+      await UploadUser(result.data.username, result.data.password);
+      Alert.alert("Account created", "You can now log in.", [
+        { text: "Go to login", onPress: () => router.replace("/") },
+      ]);
+    } catch (error) {
+      Alert.alert(
+        "Registration failed",
+        error instanceof Error ? error.message : "Please try again."
+      );
+    } 
   };
 
   return (
@@ -88,7 +92,7 @@ export default function RegisterScreen() {
                     setPassword(value);
                     setErrors((current) => ({ ...current, password: undefined }));
                   }}
-                  placeholder="At least 8 characters."
+                  placeholder="At least 6 characters."
                   placeholderTextColor="#6b7280"
                   autoComplete="new-password"
                   textContentType="newPassword"

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Marker, markerSchema } from '@/utils/markerSchema';
 import { z } from 'zod';
 import { useFocusEffect } from 'expo-router';
+import { useAuth } from '@/utils/context';
 
 
 
@@ -14,9 +15,12 @@ import { useFocusEffect } from 'expo-router';
 
 export default function HomeScreen() {
   let cancelled = false;
+  const { userId } = useAuth();
   async function loadMarkers() {
       try {
-        const userId = "1133794227705107";
+        if (!userId) {
+        throw new Error("User not found");
+        }
         const loadedMarkers = await createMarkersFromUserPost(userId);
 
         if (!cancelled) {
@@ -88,3 +92,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+

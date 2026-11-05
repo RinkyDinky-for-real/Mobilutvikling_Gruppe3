@@ -40,8 +40,8 @@ export default function LoginScreen() {
 
     } catch (error) {
       Alert.alert(
-        'Kunne ikke logge inn',
-        error instanceof Error ? error.message : 'Ukjent feil'
+        'Unable to log in:',
+        error instanceof Error ? error.message : 'Unknown error.'
       );
     } finally {
       setBusy(false);
@@ -106,7 +106,7 @@ export default function LoginScreen() {
             style={styles.primaryButton}
           >
             <Text style={styles.buttonText}>
-              {busy ? 'Logger inn...' : 'Logg inn'}
+              {busy ? 'Logging in...' : 'Log in'}
             </Text>
           </Pressable>
 
