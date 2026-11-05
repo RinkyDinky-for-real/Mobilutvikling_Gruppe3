@@ -3,11 +3,14 @@
 For gruppe 3 sitt prosjekt valgte vi å lage en expo applikasjon for fiskere over verden som trenger en måte å lagre og dele lokasjoner med god/mye fangst, vi valgte da å lage en app som fungerer likt til sosiale medier som instagram og twitter (x) hvor brukere laster opp lokasjoner hvor de selv har opplevd gode fisketilstander og poster ett innlegg til en offentlig feed som viser
 hvor og hva de fisket samt et bilde av geolokasjonen på ett kart.
 ## hvordan starte applikasjonen
-* Sett opp android emulator
-* last ned og installer npm, npx og node.js
-* åpne en terminal inne i prosjekt mappen, og kjør npm install komandoen
-* start applikasjonen med npx expo run:android
+* pakk ut prosjektet i en kort path, så nærme c: som mulig, grunnet windows sine restriksjoner på path lengder.
+* Sett opp android emulator, fra Android SDK. husk å sette systemvariabel for android emulatoren, hvis dette ikke allerede er satt opp.
+* last ned og installer npm, npx, zod og node.js
+* åpne en terminal inne i prosjekt mappen, mobilprogfiskeapp og kjør npm install komandoen.
+* start applikasjonen med npx expo run:android, hvis dette ikke funker, prøv å kjør prebuild.
 * registrere seg og logge seg inn i appen.
+* appen kan ikke kjøres på expo go grunnet at vi bruker expo 57 og expo go krever en nyere versjon, og fordi maplibre ikke fungerer med expo go.
+* for å logge ut av applikasjonen må du bruke logg ut knappen på profil siden din.
 ## flyt og kode struktur
 Når appen først åpnes, sjekkes secure store for en bruker id. Hvis en bruker id blir funnet, logges brukeren automatisk inn. Hvis ikke, blir brukeren sendt til loggin siden.
 En bruker starter ved å registrere en konto. Da blir brukernavnet og passordet validert, slik at passordet har en stor bokstav, minst 6 tegn og ett spesial symbol og ikke noen mellomrom mens brukernavnet kan bare ha bokstaver og tall. Hvis valideringen passer, sendes dataen til cloudflair workeren via https. Der sjekkes det om en bruker med samme brukernavn allerede eksisterer, i så fal, blir det sendt tilbake en 409 respons.
