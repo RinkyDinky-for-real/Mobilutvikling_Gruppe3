@@ -62,6 +62,11 @@ export default function PostDetails() {
     );
   }
   async function handleDeletePost() {
+    if (!userId) {
+      Alert.alert("Delete failed", "You are not logged in");
+      return; //det skal ikke være mulig å komme så langt uten å være innlogget uansett
+    }
+    
     try {
     await DeletePost(id, userId);
     router.back();
