@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   postContainer: {
     justifyContent: "space-between",
     borderRadius: 10,
-    marginHorizontal: 16,
+    marginHorizontal: 6,
     alignItems: "center",
     backgroundColor: colors.primary,
   },
