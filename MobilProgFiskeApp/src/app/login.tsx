@@ -1,85 +1,89 @@
-import { useContext, useState } from 'react';
-import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as SecureStore from 'expo-secure-store';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { useState } from 'react';
+import { Alert, Pressable, StyleSheet, TextInput, Text, View } from 'react-native';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { login } from '../hooks/useLogin';
-import { AuthContext } from '../utils/context';
-import { Route } from 'expo-router/build/Route';
-import { useRouter } from 'expo-router';
+import { useAuth } from '@/utils/context';
+import { router } from 'expo-router';
 
 export default function LoginScreen() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const auth = useContext(AuthContext);
-  const router = useRouter()
 
-  if (auth === null) {
-    throw new Error("av en eller annen grunn så må erroren være der");
-  }
-
-  const { setUserId } = auth;
+  const { signIn } = useAuth();
+  const [busy, setBusy] = useState(false);
 
 
+  
   const handleLogin = async () => {
-    
-    if (!userName || !password) {
-      Alert.alert('Mangler informasjon', 'Fyll inn brukernavn og passord.');
+    if (busy) return;
+
+    if (!userName.trim() || !password) {
+      Alert.alert(
+        'Mangler informasjon',
+        'Fyll inn brukernavn og passord.'
+      );
       return;
     }
 
-    Alert.alert('Logg inn', `Logger inn som ${userName}`);
-    const res = await login(userName, password);
-    console.log(res);
-    if (res.status != 200) {
-      Alert.alert("Error", "Enten brukernavnet eller passordet er feil")
-      return;
+    setBusy(true);
+
+    try {
+      const accountId = await login(userName.trim(), password);
+
+      await signIn(accountId);
+
+    } catch (error) {
+      Alert.alert(
+        'Unable to log in:',
+        error instanceof Error ? error.message : 'Unknown error.'
+      );
+    } finally {
+      setBusy(false);
     }
-    const id = await res.text();
-    setUserId(id);
-    SecureStore.setItem("userId", id)
-    router.navigate("/(tabs)/feed")
   };
 
+
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.card}>
-          <ThemedText type="title" style={styles.title}>
-            Logg inn
-          </ThemedText>
+        <View style={styles.card}>
+          <Text style={styles.appName}>
+            Angler's Atlas
+          </Text>
+          <Text style={styles.title}>
+            Log in
+          </Text>
 
-          <ThemedText type="small" style={styles.subtitle}>
-            Velkommen tilbake
-          </ThemedText>
+          <Text style={styles.subtitle}>
+            Welcome Back
+          </Text>
 
-          <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small" style={styles.inputLabel}>
-              Brukernavn
-            </ThemedText>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>
+              Username
+            </Text>
             <TextInput
               value={userName}
               onChangeText={setUserName}
-              placeholder="brukernavn"
+              placeholder="Enter your username"
               placeholderTextColor="#6b7280"
               autoCapitalize="none"
               keyboardType="default"
               style={styles.input}
             />
-          </ThemedView>
+          </View>
 
-          <ThemedView style={styles.inputGroup}>
-            <ThemedText type="small" style={styles.inputLabel}>
-              Passord
-            </ThemedText>
-            <ThemedView style={styles.passwordRow}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>
+              Password
+            </Text>
+            <View style={styles.passwordRow}>
               <TextInput
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Skriv inn passord"
+                placeholder="Enter your passord"
                 placeholderTextColor="#6b7280"
                 secureTextEntry={!showPassword}
                 style={[styles.input, styles.passwordInput]}
@@ -88,25 +92,29 @@ export default function LoginScreen() {
                 onPress={() => setShowPassword((current) => !current)}
                 style={styles.toggleButton}
               >
-                <ThemedText type="small" style={styles.inputLabel}>
-                  {showPassword ? 'Skjul' : 'Vis'}
-                </ThemedText>
+                <Text style={styles.inputLabel}>
+                  {showPassword ? 'Hide' : 'Show'}
+                </Text>
               </Pressable>
-            </ThemedView>
-          </ThemedView>
+            </View>
+          </View>
 
-          <Pressable onPress={handleLogin} style={styles.primaryButton}>
-            <ThemedText type="code" style={styles.buttonText}>
-              Logg inn
-            </ThemedText>
+          <Pressable
+            onPress={handleLogin}
+            disabled={busy}
+            style={styles.primaryButton}
+          >
+            <Text style={styles.buttonText}>
+              {busy ? 'Logging in...' : 'Log in'}
+            </Text>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton}>
-            <ThemedText type="small">Glemt passord?</ThemedText>
+          <Pressable onPress={()=> router.push('/register')}style={styles.secondaryButton}>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
-        </ThemedView>
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
@@ -135,7 +143,15 @@ const styles = StyleSheet.create({
     boxShadow: '0px 8px 14px rgba(0, 0, 0, 0.08)',
     elevation: 5,
   },
+  appName: {
+    fontSize: 48,
+    fontWeight: '400',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
   title: {
+    fontSize: 38,
+    fontWeight: '400',
     textAlign: 'center',
     marginBottom: Spacing.one,
   },

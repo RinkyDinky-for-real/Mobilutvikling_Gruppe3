@@ -6,11 +6,11 @@ const requiresNonWhitespacePattern = /[\s\S]*\S[\s\S]*/;
 const allowsEmptyOrNonWhitespacePattern = /^(?:$|[\s\S]*\S[\s\S]*)$/;
 
 export const userSchema = z.object({
-    userid: z.string().regex(idFormatPattern),
+    userId: z.string().regex(idFormatPattern),
     username: z.string().regex(usernameCharactersPattern),
     password: z.string().regex(requiresNonWhitespacePattern),
     profilepicture: z.number().int().nonnegative(),
-    backgroundimage: z.number().int().nonnegative(),
+    backgroundImage: z.number().int().nonnegative(),
     catches: z.array(z.string().regex(idFormatPattern)),
     posts: z.array(z.string().regex(idFormatPattern)),
     favoriteFish: z.string().regex(allowsEmptyOrNonWhitespacePattern),

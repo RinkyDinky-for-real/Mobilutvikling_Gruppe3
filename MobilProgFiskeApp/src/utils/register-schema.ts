@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const registerSchema = z.object({
   username: z
   .string()
-  .regex(new RegExp('^[a-zA-Z0-9æøåÆØÅ_]+$'), 'Brukernavn kan kun inneholde bokstaver, tall og understrek')
-  .min(2, 'Brukernavn er påkrevd'),
+  .regex(new RegExp('^[a-zA-Z0-9æøåÆØÅ_]+$'), 'Username can only contain letters, numbers and underscores')
+  .min(2, 'Username is too short'),
   password: z
   .string()
   .regex(new RegExp('^(?=.*[a-zæøå])(?=.*[A-ZÆØÅ])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-zæøåÆØÅ\\d@$!%*?&]{6,}$'), 'Passord må inneholde minst en stor bokstav, en liten bokstav, ett tall og ett spesialtegn')

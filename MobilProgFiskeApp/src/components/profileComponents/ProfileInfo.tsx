@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Fish, MapPin, FishingHook, SquarePen } from 'lucide-react-native';
+import { LogOut } from 'lucide-react-native';
 import { colors, globalStyles } from '@/styles/global';
 
 type ProfileInfoProps = {
@@ -7,6 +8,7 @@ type ProfileInfoProps = {
   favoriteSpot: string;
   fishingStyle: string;
   onEdit: () => void;
+  signOut: () => void;
 };
 
 export default function ProfileInfo({
@@ -14,6 +16,7 @@ export default function ProfileInfo({
   favoriteSpot,
   fishingStyle,
   onEdit,
+  signOut,
 }: ProfileInfoProps) {
   return (
     <View style={[styles.infoContainer, globalStyles.shadow]}>
@@ -42,9 +45,13 @@ export default function ProfileInfo({
           </View>
         </View>
       </View>
-      <View style={styles.editContainer}>
+      <View style={styles.editSignoutContainer}>
         <Pressable onPress={onEdit} accessibilityRole="button">
           <SquarePen color={colors.iconTeal} size={24} />
+        </Pressable>
+
+        <Pressable onPress={signOut} accessibilityRole="button">
+          <LogOut color={colors.highlight} size={24} />
         </Pressable>
       </View>
     </View>
@@ -76,8 +83,8 @@ const styles = StyleSheet.create({
   infoItemTextContainer: {
     marginHorizontal: 10,
   },
-  editContainer: {
-    justifyContent: "flex-end",
-    alignItems: "flex-start",
-  },
+  editSignoutContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+  }
 });

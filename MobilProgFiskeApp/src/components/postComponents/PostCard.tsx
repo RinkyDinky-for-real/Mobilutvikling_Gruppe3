@@ -1,6 +1,8 @@
-import { Pressable, Text, View, StyleSheet } from 'react-native';
-import type { Post } from "@/utils/postSchema"
-import { globalStyles } from '@/styles/global';
+import { colors, globalStyles } from '@/styles/global';
+import type { Post } from "@/utils/postSchema";
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { SmallMapCard } from '@/components/mapComponents/small-map-card';
 
 type PostCardProps = {
   post: Post;
@@ -11,35 +13,36 @@ export default function PostCard({
   post,
   onOpen
 }: PostCardProps) {
-    const {postid, userid, title, content, longitude, latitude, date } = post;
+    const { title, longitude, latitude, date } = post;
 
   return (
-    <View>
+    <View style={[styles.postContainer, globalStyles.shadow]}>
       <Pressable onPress={onOpen} disabled={!onOpen}>
-        <Text>{postid}</Text>
-        <Text>{userid}</Text>
-        <Text>{title}</Text>
-        <Text>{content}</Text>
-        <Text>{longitude}</Text>
-        <Text>{latitude}</Text>
-        <Text>{date}</Text>
-
-        {/* placeholder box where PostImage goes */}
-        <View style={[styles.postImage, globalStyles.shadow ]}/>
+        <Text style={styles.title}>{title}</Text>
+        <SmallMapCard longlat={[longitude, latitude]} zoom={10} />
+        <View style={styles.postInfoContainer}>
+          <Text> Uploaded: {date}</Text>
+        </View>
       </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  postImage: {
-    height: 200,
-    backgroundColor: '#EEEEEE',
-    borderRadius: 12,
+  postContainer: {
+    justifyContent: "space-between",
+    borderRadius: 10,
+    marginHorizontal: 6,
+    alignItems: "center",
+    backgroundColor: colors.primary,
   },
-  postInfo: {
-    flexDirection: "row",
-    margin: 12,
-    alignItems: "flex-end"
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginVertical: 16,
+  },
+  postInfoContainer: {
+    flexDirection: "column",
+    margin: 16,
   }
 });

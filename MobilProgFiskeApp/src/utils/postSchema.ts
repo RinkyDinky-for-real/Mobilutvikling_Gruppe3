@@ -6,7 +6,7 @@ const datePattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
 
 
 export const postSchema = z.object({
-    postid: z.string().regex(idPattern),
+    postId: z.string().regex(idPattern),
     title: z.string().regex(requiresNonWhitespacePattern),
     content: z.string().regex(requiresNonWhitespacePattern),
     longitude: z.number()

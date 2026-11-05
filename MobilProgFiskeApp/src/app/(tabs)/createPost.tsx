@@ -1,0 +1,205 @@
+import { useState } from "react";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { UploadPost } from "@/hooks/use-Upload-Post";
+import { Camera, Map } from '@maplibre/maplibre-react-native';
+import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
+import type { Post } from "@/utils/postSchema";
+import { useAuth } from "@/utils/context";
+
+
+
+export default function CreatePostScreen() {
+  const [uploading, setUploading] = useState(false);
+  const [uploaded, setUploaded] = useState(true)
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [title, setTitle]= useState("")
+  const [content, setContent]= useState("")
+  const { userId, } = useAuth();
+  const [mapVisible, setMapVisible] = useState(true);
+  
+  async function handleUploadPost(userId: string, title: string, content: string, latitude: number, longitude: number) {
+    const date = new Date().toISOString()
+    setUploading(true);
+
+    try {
+      console.log("Uploading post with data:", { userId, title, content, latitude, longitude, date });
+      const response = await UploadPost(
+        userId,
+        title,
+        content,
+        latitude,
+        longitude,
+        date
+      );
+      setUploaded(true);
+
+    } catch (error) {
+      Alert.alert(
+        "Upload failed",
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <View style={styles.createContainer}>
+      <View style={styles.card}> 
+        <Text style={styles.title}>
+          Create Post
+        </Text>
+        <View>
+          <View style={styles.mapheader}>
+            <Text>Choose point on map</Text>
+            <Pressable onPress={() => setMapVisible((visible) => !visible)}>
+              <Text>{mapVisible ? "Hide map" : "Show map"}</Text>
+            </Pressable>
+          </View>
+          {mapVisible && (
+          <Map
+            style={styles.map}
+            mapStyle="https://tiles.openfreemap.org/styles/liberty"
+            onPress={(event) => {
+              const [longitude, latitude] = event.nativeEvent.lngLat;
+              setLongitude(longitude);
+              setLatitude(latitude);
+              setUploaded(false);
+            }}
+          >
+            <Camera zoom={1} />
+          </Map>
+          )}
+          <Text>Longitude: {longitude}</Text>
+          <Text>Latitude: {latitude} </Text>
+        </View>
+        <TextInput style={styles.input}
+          value={title}
+          onChangeText={setTitle}
+          keyboardType="default"
+          placeholder="Write a title"
+          accessibilityLabel="Title"
+        />
+        <TextInput style={styles.input}
+          value={content}
+          onChangeText={setContent}
+          keyboardType="default"
+          placeholder="Write a short description"
+          accessibilityLabel="Content"
+        />
+        <Pressable style={styles.primaryButton}onPress={() => {
+          if (!userId) {
+          Alert.alert("Not signed in", "Please sign in before creating a post.");
+          return; 
+      } handleUploadPost(userId, title, content, latitude, longitude)}} disabled={uploading}>
+          <View style={{ alignItems: 'center', justifyContent: 'center', padding: 15, borderRadius: 25 }}>
+              <Text>{uploaded ? "Uploaded!": uploading ? "Uploading..." : "Post"}</Text>
+          </View>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  createContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  map: {
+    height: 300,
+  },
+  safeArea: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Spacing.four,
+    paddingBottom: BottomTabInset + Spacing.three,
+    maxWidth: MaxContentWidth,
+  },
+  card: {
+    width: '100%',
+    maxWidth: 420,
+    padding: Spacing.four,
+    borderRadius: 24,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 5,
+  },
+  title: {
+    fontSize: 48,
+    fontWeight: 400,
+    textAlign: 'center',
+    marginBottom: Spacing.one,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: Spacing.three,
+    opacity: 0.7,
+  },
+  inputGroup: {
+    gap: Spacing.one,
+    marginBottom: Spacing.three,
+    backgroundColor: '#ffffff',
+  },
+  inputLabel: {
+    color: '#111827',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#b8c7dc',
+    borderRadius: 12,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.two,
+    backgroundColor: '#ffffff',
+    color: '#111827',
+    fontSize: 16,
+  },
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    backgroundColor: '#ffffff',
+  },
+  passwordInput: {
+    flex: 1,
+  },
+  toggleButton: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.one,
+  },
+  primaryButton: {
+    backgroundColor: '#1f6feb',
+    borderRadius: 12,
+    paddingVertical: Spacing.two,
+    alignItems: 'center',
+    marginTop: Spacing.one,
+  },
+  disabledButton: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  secondaryButton: {
+    backgroundColor: '#2e1ec0',
+    borderRadius: 12,
+    paddingHorizontal: Spacing.four,
+    alignItems: 'center',
+    paddingVertical: Spacing.two,
+    marginTop: Spacing.one,
+  },
+  mapheader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+});
