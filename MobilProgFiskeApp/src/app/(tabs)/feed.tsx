@@ -67,10 +67,10 @@ export default function FeedScreen() {
 
   // Replace later with use-fetch-posts hook to fetch a single post and navigate to the post page
   function openPost(postId: string) {
-    router.push({
-      pathname: '/post',
+   router.push({
+      pathname: '/posts/[id]',
       params: { id: postId },
-    });
+    });;
   }
 
   return (
@@ -78,6 +78,11 @@ export default function FeedScreen() {
       style={styles.safeArea}
       edges={['top']}
     >
+      <View style={styles.banner}>
+        <Text style={styles.bannerText}>
+          Feed
+        </Text>
+      </View>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.postId}
@@ -119,7 +124,7 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background
+    backgroundColor: colors.background,
   },
 
   listContent: {
@@ -137,5 +142,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 16,
     color: colors.text
+  },
+  banner: {
+    borderBottomWidth: 4,
+  },
+  bannerText: {
+    width: '100%',
+    fontSize: 48,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
