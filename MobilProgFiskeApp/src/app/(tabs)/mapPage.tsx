@@ -59,7 +59,7 @@ export default function HomeScreen() {
 
       <View style={styles.text}>
         <Text style={styles.title}>
-          Fishing App
+          Angler's Atlas
         </Text>
       </View>
     </View>
@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
+  borderBottomWidth: 4,
   position: 'absolute',
   top: 0,
   zIndex: 10,
