@@ -142,8 +142,8 @@ export default {
 			shouldSend = true
 			query = "delete from posts where postId = ? and userId = ?"
 			value = request.headers.get("postId")
-			env.mobile_programming.prepare(query).bind(value, userId).run()
-			return(new Response(""))
+			await env.mobile_programming.prepare(query).bind(value, userId).run()
+			return(new Response("Post deleted", {"status": 200}))
 		}
 		else if (pathname === "/api/v1/user/count" && request.method === "GET") {
 			
