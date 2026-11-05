@@ -149,23 +149,7 @@ export default function ProfileScreen() {
 
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-
-        <ProfileHeader
-            username={profileData.username}
-            profilePicture="https://picsum.photos/200"
-            backgroundImage="https://picsum.photos/600/200"
-            spots={profileData.spots}
-        />
-        <ProfileStats
-          spots={profileData.spots}
-        />
-        <ProfileInfo
-          favoriteFish={profileData.favoriteFish}
-          favoriteSpot={profileData.favoriteSpot}
-          fishingStyle={profileData.fishingStyle}
-          onEdit={openEditForm}
-          signOut={signOut}
-        />
+        
         <FlatList
                 data={posts}
                 keyExtractor={(item) => item.postId}
@@ -178,9 +162,27 @@ export default function ProfileScreen() {
                 )}
         
                 ListHeaderComponent={
-                  <Text style={styles.title}>
-                    My posts
-                  </Text>
+                  <View>
+                    <ProfileHeader
+                      username={profileData.username}
+                      profilePicture="https://picsum.photos/200"
+                      backgroundImage="https://picsum.photos/600/200"
+                      spots={profileData.spots}
+                      />
+                    <ProfileStats
+                    spots={profileData.spots}
+                    />
+                    <ProfileInfo
+                    favoriteFish={profileData.favoriteFish}
+                    favoriteSpot={profileData.favoriteSpot}
+                    fishingStyle={profileData.fishingStyle}
+                    onEdit={openEditForm}
+                    signOut={signOut}
+                    />
+                    <Text style={styles.title}>
+                      My posts
+                    </Text>
+                  </View>
                 }
         
                 ListEmptyComponent={
