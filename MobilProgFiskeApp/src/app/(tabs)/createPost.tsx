@@ -45,7 +45,7 @@ export default function CreatePostScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.createContainer}>
       <View style={styles.card}> 
         <Text style={styles.title}>
           Create Post
@@ -102,8 +102,10 @@ export default function CreatePostScreen() {
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  createContainer: {
     flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   map: {
     height: 300,
