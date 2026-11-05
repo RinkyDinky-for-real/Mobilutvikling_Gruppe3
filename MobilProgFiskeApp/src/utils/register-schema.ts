@@ -7,8 +7,8 @@ export const registerSchema = z.object({
   .min(2, 'Username is too short'),
   password: z
   .string()
-  .regex(new RegExp('^(?=.*[a-zæøå])(?=.*[A-ZÆØÅ])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-zæøå\\d@$!%*?&]{6,}$'), 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character')
-  .min(6, 'Password must be at least 6 characters long'),
+  .regex(new RegExp('^(?=.*[a-zæøå])(?=.*[A-ZÆØÅ])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-zæøåÆØÅ\\d@$!%*?&]{6,}$'), 'Passord må inneholde minst en stor bokstav, en liten bokstav, ett tall og ett spesialtegn')
+  .min(6, 'Passord må være minst 6 tegn langt'),
 
 });
 
