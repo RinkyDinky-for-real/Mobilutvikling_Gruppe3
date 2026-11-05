@@ -29,10 +29,10 @@ export async function login(
   if (
     !Array.isArray(data) ||
     !data[0] ||
-    typeof data[0].AccountId !== 'string'
+    typeof data[0].userId !== 'string'
   ) {
     throw new Error('Unexpected login response');
   }
 
-  return data[0].AccountId;
+  return data[0].userId;
 }
