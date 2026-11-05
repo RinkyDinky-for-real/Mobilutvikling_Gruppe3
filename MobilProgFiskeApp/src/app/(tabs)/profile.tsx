@@ -10,7 +10,7 @@ import ProfileStats from "@/components/profileComponents/ProfileStats";
 import ProfileInfo from "@/components/profileComponents/ProfileInfo";
 import { fetchUser } from "@/hooks/use-Fetch-User";
 import { EditUser } from "@/hooks/use-Edit-User";
-import { fetchAllPostsFromUser, fetchPostsCountFromUser, fetchRandomPosts } from "@/hooks/use-Fetch-Posts";
+import { fetchAllPostsFromUser, fetchPostsCountFromUser } from "@/hooks/use-Fetch-Posts";
 import PostCard from '@/components/postComponents/PostCard';
 import { useAuth } from "@/utils/context";
 
