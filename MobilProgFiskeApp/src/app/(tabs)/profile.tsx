@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -101,12 +101,13 @@ export default function ProfileScreen() {
     void loadProfile();
   }, [userId]);
 
-  useEffect(() => {
-  if (!userId) {
-    setPosts([]);
-    setLoading(false);
-    return;
-  }
+  useFocusEffect(
+  useCallback(() => {
+    if (!userId) {
+      setPosts([]);
+      setLoading(false);
+      return;
+    }
   const currentUserId = userId;
   let cancelled = false;
 
@@ -137,7 +138,7 @@ export default function ProfileScreen() {
   return () => {
     cancelled = true;
   };
-  }, [userId]);
+  }, [userId]));
 
   function openPost(post: Post) {
     router.push({
