@@ -10,7 +10,6 @@ export const markerSchema = z.object({
     ]),
     photolink: z.number().int().nonnegative(),
     pointName: z.string().regex(/\S/),
-    RedirectLink: z.enum(['/feed', '/']),
 });
 
 export type Marker = z.infer<typeof markerSchema>;
