@@ -1,5 +1,5 @@
 import { colors } from '@/styles/global';
-import { FishingRod, CirclePlus , CircleUserRound } from 'lucide-react-native';
+import { FishingRod, CirclePlus , CircleUserRound, ScrollText } from 'lucide-react-native';
 import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
@@ -29,7 +29,7 @@ export default function TabLayout() {
         options={{
           title: 'Feed',
           tabBarIcon: ({ color, size }) => (
-            <CirclePlus size={size} color={color} />
+            <ScrollText size={size} color={color} />
           ),
         }}
       />
@@ -45,9 +45,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name='createPost'
         options={{
-          title: 'Tests',
+          title: 'Create Post',
           tabBarIcon: ({ color, size }) => (
-            <CircleUserRound size={size} color={color} />
+            <CirclePlus size={size} color={color} />
           ),
         }}
       />

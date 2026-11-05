@@ -16,6 +16,7 @@ export default function CreatePostScreen() {
   const [title, setTitle]= useState("")
   const [content, setContent]= useState("")
   const { userId, } = useAuth();
+  const [mapVisible, setMapVisible] = useState(true);
   
   async function handleUploadPost(userId: string, title: string, content: string, latitude: number, longitude: number) {
     const date = new Date().toISOString()
@@ -31,6 +32,7 @@ export default function CreatePostScreen() {
         longitude,
         date
       );
+      setUploaded(true);
 
     } catch (error) {
       Alert.alert(
@@ -39,29 +41,38 @@ export default function CreatePostScreen() {
       );
     } finally {
       setUploading(false);
-      setUploaded(true);
     }
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.createContainer}>
       <View style={styles.card}> 
-        <Text style={{ textAlign: 'center' }}>
-          Post
+        <Text style={styles.title}>
+          Create Post
         </Text>
         <View>
-          <Text>Choose point on map</Text>
-          <Map style={styles.map}  mapStyle="https://tiles.openfreemap.org/styles/liberty" 
-          onPress={(event) => { 
-            const [longitude, latitude] = event.nativeEvent.lngLat;
-            setLongitude(longitude); 
-            setLatitude(latitude);
-            setUploaded(false)
-          }}>
-            <Camera zoom={1}/>
+          <View style={styles.mapheader}>
+            <Text>Choose point on map</Text>
+            <Pressable onPress={() => setMapVisible((visible) => !visible)}>
+              <Text>{mapVisible ? "Hide map" : "Show map"}</Text>
+            </Pressable>
+          </View>
+          {mapVisible && (
+          <Map
+            style={styles.map}
+            mapStyle="https://tiles.openfreemap.org/styles/liberty"
+            onPress={(event) => {
+              const [longitude, latitude] = event.nativeEvent.lngLat;
+              setLongitude(longitude);
+              setLatitude(latitude);
+              setUploaded(false);
+            }}
+          >
+            <Camera zoom={1} />
           </Map>
+          )}
           <Text>Longitude: {longitude}</Text>
-            <Text>Latitude: {latitude} </Text>
+          <Text>Latitude: {latitude} </Text>
         </View>
         <TextInput style={styles.input}
           value={title}
@@ -77,7 +88,7 @@ export default function CreatePostScreen() {
           placeholder="Write a short description"
           accessibilityLabel="Content"
         />
-        <Pressable onPress={() => {
+        <Pressable style={styles.primaryButton}onPress={() => {
           if (!userId) {
           Alert.alert("Not signed in", "Please sign in before creating a post.");
           return; 
@@ -91,8 +102,10 @@ export default function CreatePostScreen() {
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  createContainer: {
     flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   map: {
     height: 300,
@@ -182,5 +195,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.two,
     marginTop: Spacing.one,
+  },
+  mapheader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
   },
 });

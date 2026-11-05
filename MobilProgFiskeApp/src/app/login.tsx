@@ -30,18 +30,14 @@ export default function LoginScreen() {
     setBusy(true);
 
     try {
-      // Verify credentials using the backend
       const accountId = await login(userName.trim(), password);
 
-      // Create and save the local session
       await signIn(accountId);
-
-      // Expo Router will automatically update the navigation
 
     } catch (error) {
       Alert.alert(
-        'Kunne ikke logge inn',
-        error instanceof Error ? error.message : 'Ukjent feil'
+        'Unable to log in:',
+        error instanceof Error ? error.message : 'Unknown error.'
       );
     } finally {
       setBusy(false);
@@ -53,6 +49,9 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.card}>
+          <Text style={styles.appName}>
+            Angler's Atlas
+          </Text>
           <Text style={styles.title}>
             Log in
           </Text>
@@ -106,7 +105,7 @@ export default function LoginScreen() {
             style={styles.primaryButton}
           >
             <Text style={styles.buttonText}>
-              {busy ? 'Logger inn...' : 'Logg inn'}
+              {busy ? 'Logging in...' : 'Log in'}
             </Text>
           </Pressable>
 
@@ -144,8 +143,14 @@ const styles = StyleSheet.create({
     boxShadow: '0px 8px 14px rgba(0, 0, 0, 0.08)',
     elevation: 5,
   },
-  title: {
+  appName: {
     fontSize: 48,
+    fontWeight: '400',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 38,
     fontWeight: '400',
     textAlign: 'center',
     marginBottom: Spacing.one,
