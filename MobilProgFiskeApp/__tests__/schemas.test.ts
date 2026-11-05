@@ -5,13 +5,13 @@ import { registerSchema } from '../src/utils/register-schema';
 import { userSchema } from '../src/utils/userSchema';
 
 const user = {
-  userId: '12',
+  userId: '464dbf91-467e-427c-a698-f369be895fc7',
   username: 'Angler_1',
   password: 'Abcdef1!',
   profilepicture: 0,
   backgroundImage: 0,
-  catches: ['3'],
-  posts: ['4'],
+  catches: ['7da08ff5-191a-4f2c-925c-99b76821386b'],
+  posts: ['63426f6d-2a26-4d19-ab96-b96d1bf532ef'],
   favoriteFish: '',
   favoriteSpot: '',
   fishingStyle: '',
@@ -37,7 +37,7 @@ describe('data schemas', () => {
   test('validates users and rejects invalid IDs, images, or passwords', () => {
     expect(userSchema.safeParse(user).success).toBe(true);
     for (const change of [
-      { userId: 'angler' },
+      { userId: '12' },
       { profilepicture: -1 },
       { password: '   ' },
     ]) {
