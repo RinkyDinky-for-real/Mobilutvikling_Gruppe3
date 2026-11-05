@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const idFormatPattern = /^[0-9]+$/;
+const idFormatPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 const usernameCharactersPattern = /^[A-Za-z0-9æøåÆØÅ_-]+$/;
 const requiresNonWhitespacePattern = /[\s\S]*\S[\s\S]*/;
 const allowsEmptyOrNonWhitespacePattern = /^(?:$|[\s\S]*\S[\s\S]*)$/;
