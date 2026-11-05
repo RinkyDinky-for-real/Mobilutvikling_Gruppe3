@@ -6,7 +6,7 @@ const datePattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
 
 
 export const postSchema = z.object({
-    postId: z.string().regex(idPattern),
+    postId: z.string(),
     title: z.string().regex(requiresNonWhitespacePattern),
     content: z.string().regex(requiresNonWhitespacePattern),
     longitude: z.number()
@@ -15,7 +15,7 @@ export const postSchema = z.object({
     latitude: z.number()
         .min(-90, 'Latitude must be between -90 and 90')
         .max(90, 'Latitude must be between -90 and 90'),
-    date: z.string().regex(datePattern),
+    date: z.string()
 });
 
 export type Post = z.infer<typeof postSchema>;
