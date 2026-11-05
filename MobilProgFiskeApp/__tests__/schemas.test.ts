@@ -7,10 +7,10 @@ import { userSchema } from '../src/utils/userSchema';
 const user = {
   userId: '12',
   username: 'Angler_1',
-  password: 'secret',
-  profilePicture: 0,
-  backGroundImage: 0,
-  Catches: ['3'],
+  password: 'Abcdef1!',
+  profilepicture: 0,
+  backgroundImage: 0,
+  catches: ['3'],
   posts: ['4'],
   favoriteFish: '',
   favoriteSpot: '',
@@ -18,8 +18,7 @@ const user = {
 };
 
 const post = {
-  postid: '2',
-  userid: '12',
+  postId: '2',
   title: 'River trout',
   content: 'Caught near the bridge.',
   longitude: 180,
@@ -27,48 +26,52 @@ const post = {
   date: '11/04/2026',
 };
 
+const marker = {
+  id: '5',
+  longlat: [180, -90] as [number, number],
+  photolink: 0,
+  pointName: 'North shore',
+};
+
 describe('data schemas', () => {
-  test('accepts a user with valid fields', () => {
+  test('validates users and rejects invalid IDs, images, or passwords', () => {
     expect(userSchema.safeParse(user).success).toBe(true);
+    for (const change of [
+      { userId: 'angler' },
+      { profilepicture: -1 },
+      { password: '   ' },
+    ]) {
+      expect(userSchema.safeParse({ ...user, ...change }).success).toBe(false);
+    }
   });
 
-  test('rejects a user with a non-numeric ID', () => {
-    expect(userSchema.safeParse({ ...user, userId: 'angler' }).success).toBe(false);
-  });
-
-  test('accepts registration credentials that meet the rules', () => {
+  test('accepts valid registration credentials and rejects invalid ones', () => {
     expect(registerSchema.safeParse({ username: 'Angler_1', password: 'Abcdef1!' }).success).toBe(true);
-  });
-
-  test('rejects a registration password missing required character types', () => {
+    expect(registerSchema.safeParse({ username: 'bad-name', password: 'Abcdef1!' }).success).toBe(false);
     expect(registerSchema.safeParse({ username: 'Angler_1', password: 'alllowercase' }).success).toBe(false);
   });
 
-  test('accepts a post at the coordinate boundaries', () => {
+  test('validates post fields and coordinate boundaries', () => {
     expect(postSchema.safeParse(post).success).toBe(true);
+    for (const change of [
+      { longitude: 181 },
+      { latitude: -91 },
+      { title: '   ' },
+      { content: '   ' },
+    ]) {
+      expect(postSchema.safeParse({ ...post, ...change }).success).toBe(false);
+    }
   });
 
-  test('rejects a post outside the coordinate range', () => {
-    expect(postSchema.safeParse({ ...post, latitude: 91 }).success).toBe(false);
-  });
-
-  test('accepts a marker with a valid route and coordinates', () => {
-    expect(markerSchema.safeParse({
-      id: '5',
-      longlat: [180, -90],
-      photolink: 0,
-      pointName: 'North shore',
-      RedirectLink: '/feed',
-    }).success).toBe(true);
-  });
-
-  test('rejects a marker with an unsupported route', () => {
-    expect(markerSchema.safeParse({
-      id: '5',
-      longlat: [10, 20],
-      photolink: 0,
-      pointName: 'North shore',
-      RedirectLink: '/unknown',
-    }).success).toBe(false);
+  test('validates marker IDs, coordinates, image references, and names', () => {
+    expect(markerSchema.safeParse(marker).success).toBe(true);
+    for (const change of [
+      { id: 'spot' },
+      { longlat: [10, 91] },
+      { photolink: -1 },
+      { pointName: ' ' },
+    ]) {
+      expect(markerSchema.safeParse({ ...marker, ...change }).success).toBe(false);
+    }
   });
 });
