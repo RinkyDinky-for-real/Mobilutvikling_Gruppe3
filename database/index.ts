@@ -40,7 +40,7 @@ export default {
 		if (pathname === "/api/v1/post/random" && request.method === "GET" && request.headers.get("limit")) {
 			shouldSend = true
 
-			query = "SELECT postid, users.username, title, content, latitude, longitude, date from posts join users on users.userId  = posts.UserId where posts.UserId != ? order by random() limit ?"
+			query = "SELECT postId, users.userName, title, content, latitude, longitude, date from posts join users on users.userId  = posts.userId where posts.userId != ? order by random() limit ?"
 			value = "0"
 			const { results } = await env.mobile_programming.prepare(query).bind(value, request.headers.get("limit")).run()
 			return (Response.json(results))
@@ -48,7 +48,7 @@ export default {
 
 		if (pathname === "/api/v1/user/getuserid" && request.headers.get("userName") && request.headers.get("passwordHash") && request.method === "GET") {
 			const h = await  hash(request.headers.get("passwordHash"))
-			const { results } = await env.mobile_programming.prepare("select userId from users where userName = ? and PasswordHash = ?").bind(request.headers.get("userName"), h).run()
+			const { results } = await env.mobile_programming.prepare("select userId from users where userName = ? and passwordHash = ?").bind(request.headers.get("userName"), h).run()
 			if (results.length == 0) {
 				return (new Response("User not found", { "status": 404 }))
 			}
@@ -62,7 +62,7 @@ export default {
 			}
 			if (request.headers.get("passwordHash")) {
 				const h = await hash(request.headers.get("passwordHash"))
-				await env.mobile_programming.prepare("update users set PasswordHash = ? where userId = ? limit 1").bind(h, request.headers.get("userId")).run()
+				await env.mobile_programming.prepare("update users set passwordHash = ? where userId = ? limit 1").bind(h, request.headers.get("userId")).run()
 			}
 			if (request.headers.get("favoriteFishingPlace") != null) {
 				await env.mobile_programming.prepare("update users set favoritePlace = ? where userId = ?").bind(request.headers.get("favoriteFishingPlace"), request.headers.get("userId")).run()
@@ -78,7 +78,7 @@ export default {
 		}
 		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId") && request.headers.get("userId")) {
 			
-			const { results } = await env.mobile_programming.prepare("SELECT users.userName, title, datecontent, latitude, longitude, date from posts join users on users.userId  = posts.UserId where posts.UserId = ? and users.userId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
+			const { results } = await env.mobile_programming.prepare("SELECT users.userName, title, content, latitude, longitude, date from posts join users on users.userId  = posts.userId where posts.userId = ? and users.userId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
 			let status = 200
 			if (results.length == 0) {
 				status = 404
@@ -86,7 +86,7 @@ export default {
 			return (Response.json(results, {"status": status}))
 		}
 		if (!(userId || request.method === "POST" || pathname === "/api/v1/post" && request.method === "DELETE")) {
-			return (new Response("UserId missing", {"status": 400}))
+			return (new Response("userId missing", {"status": 400}))
 		}
 
 		if (pathname === "/api/v1/user" && request.method === "GET") {
@@ -97,7 +97,7 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "GET") {
 			shouldSend = true
-			query = "SELECT users.userName, postId, title, datecontent, latitude, longitude, date from posts join users on users.userId  = posts.UserId where posts.UserId = ? order by date desc"
+			query = "SELECT users.userName, postId, title, content, latitude, longitude, date from posts join users on users.userId  = posts.userId where posts.userId = ? order by date desc"
 			value = userId
 		}
 		else if (pathname == "/api/v1/user" && request.method == "POST") {
@@ -113,12 +113,12 @@ export default {
 			const h = await hash(request.headers.get("passwordHash"))
 			
 			
-			await env.mobile_programming.prepare("insert into users (userId, userName, titlepasswordHash, favoriteFishingMethod, favoritePlace, favoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), h, ).run();
+			await env.mobile_programming.prepare("insert into users (userId, userName, passwordHash, favoriteFishingMethod, favoritePlace, favoriteFish) values (?, ?, ?, '', '', '')").bind(newId, request.headers.get("userName"), h, ).run();
 			return new Response(newId, { status: 201 })
 		}
 		else if (pathname === "/api/v1/user" && request.method === "DELETE") {
 			shouldSend = true
-			await env.mobile_programming.prepare("delete from posts where UserId = ?").bind(userId).run()
+			await env.mobile_programming.prepare("delete from posts where userId = ?").bind(userId).run()
 			query = "delete from users where userId = ?"
 			value = userId
 
@@ -126,16 +126,12 @@ export default {
 		else if (pathname === "/api/v1/post" && request.method === "POST") {
 			const headers = request.headers
 			if (!(headers.get("userId") && headers.get("title") && headers.get("content") && headers.get("latitude") && headers.get("longitude") && headers.get("date"))) {
-				return (new Response("datecontent missing", { "status": 400 }))
+				return (new Response("content missing", { "status": 400 }))
 			}
 			let newId = crypto.randomUUID()
 			// dates must be sent in so the most significant data is stored first in the string, e.g, year/month/day/hour/minit, so the sorting works.
-			try {
-				const { results} = await env.mobile_programming.prepare("insert into posts (postId, UserId, title, datecontent, latitude, longitude, date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longitude"), headers.get("date")).run()
-			}
-			catch {
-				return (new Response("User not found", {"status": 400}))
-			}
+			const { results} = await env.mobile_programming.prepare("insert into posts (postId, userId, title, content, latitude, longitude, date) values (?, ?, ?, ?, ?, ?, ?)").bind(newId, headers.get("userId"), headers.get("title"), headers.get("content"), headers.get("latitude"), headers.get("longitude"), headers.get("date")).run()
+			
 			//const { results } = env.mobile_programming.prepare("select * from posts where postId = ?").bind(newId)
 			//console.log(results)
 			//return (new Response(newId));
@@ -144,7 +140,7 @@ export default {
 		}
 		else if (pathname === "/api/v1/post" && request.method === "DELETE" && request.headers.get("postId") && userId) {
 			shouldSend = true
-			query = "delete from posts where postId = ? and UserId = ?"
+			query = "delete from posts where postId = ? and userId = ?"
 			value = request.headers.get("postId")
 			env.mobile_programming.prepare(query).bind(value, userId).run()
 			return(new Response(""))
