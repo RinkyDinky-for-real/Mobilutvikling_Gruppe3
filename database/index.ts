@@ -78,7 +78,7 @@ export default {
 		}
 		if (pathname === "/api/v1/getpost" && request.method === "GET" && request.headers.get("postId") && request.headers.get("userId")) {
 			
-			const { results } = await env.mobile_programming.prepare("SELECT users.userName, title, content, latitude, longitude, date from posts join users on users.userId  = posts.userId where posts.userId = ? and users.userId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
+			const { results } = await env.mobile_programming.prepare("SELECT users.userName, title, content, latitude, longitude, date from posts join users on users.userId  = posts.userId where posts.postId = ? and users.userId = ?").bind(request.headers.get("postId",), request.headers.get("userId")).run()
 			let status = 200
 			if (results.length == 0) {
 				status = 404
