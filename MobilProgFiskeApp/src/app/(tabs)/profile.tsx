@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "600",
+    marginBottom: 16,
   },
   edittitle:{
     fontSize: 48,
@@ -291,7 +292,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingTop: 16,
     paddingBottom: 32,
-
   },
   postTitle: {
   fontSize: 20,
