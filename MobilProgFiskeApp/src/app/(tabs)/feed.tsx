@@ -1,8 +1,8 @@
 
-import { useState, useEffect, Activity } from 'react';
+import { useState, useEffect, Activity, useCallback } from 'react';
 import { ActivityIndicator,FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { colors } from '@/styles/global';
 
 import { postSchema, type Post } from "@/utils/postSchema"
@@ -17,12 +17,13 @@ export default function FeedScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!userId) {
-      setPosts([]);
-      setLoading(false);
-      return;
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (!userId) {
+        setPosts([]);
+        setLoading(false);
+        return;
+      }
 
     let cancelled = false;
 
@@ -63,7 +64,7 @@ export default function FeedScreen() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId]));
 
  
   function openPost(post: Post) {
