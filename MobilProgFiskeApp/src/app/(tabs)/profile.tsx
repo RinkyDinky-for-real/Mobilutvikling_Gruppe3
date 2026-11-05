@@ -1,18 +1,18 @@
-import { StyleSheet, ScrollView, Alert, Modal, View, Text, TextInput, Pressable, FlatList, ActivityIndicator } from "react-native";
-import { useEffect, useState } from "react";
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { postSchema, type Post } from "@/utils/postSchema"
+import PostCard from '@/components/postComponents/PostCard';
 import ProfileHeader from "@/components/profileComponents/ProfileHeader";
-import { colors } from '@/styles/global';
-import ProfileStats from "@/components/profileComponents/ProfileStats";
 import ProfileInfo from "@/components/profileComponents/ProfileInfo";
-import { fetchUser } from "@/hooks/use-Fetch-User";
+import ProfileStats from "@/components/profileComponents/ProfileStats";
 import { EditUser } from "@/hooks/use-Edit-User";
 import { fetchAllPostsFromUser, fetchPostsCountFromUser } from "@/hooks/use-Fetch-Posts";
-import PostCard from '@/components/postComponents/PostCard';
+import { fetchUser } from "@/hooks/use-Fetch-User";
+import { colors } from '@/styles/global';
 import { useAuth } from "@/utils/context";
+import { postSchema, type Post } from "@/utils/postSchema";
 
 export default function ProfileScreen() {
   const { userId, signOut } = useAuth();
@@ -179,7 +179,7 @@ export default function ProfileScreen() {
                     onEdit={openEditForm}
                     signOut={signOut}
                     />
-                    <Text style={styles.title}>
+                    <Text style={styles.postTitle}>
                       My posts
                     </Text>
                   </View>
@@ -289,9 +289,14 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 800,
     alignSelf: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     paddingTop: 16,
     paddingBottom: 32,
+  },
+  postTitle: {
+  fontSize: 20,
+  fontWeight: "600",
+  marginHorizontal: 16
   },
 });
 

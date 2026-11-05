@@ -1,8 +1,8 @@
-import { Pressable, Text, View, StyleSheet } from 'react-native';
-import type { Post } from "@/utils/postSchema"
-import { globalStyles, colors } from '@/styles/global';
+import { colors, globalStyles } from '@/styles/global';
+import type { Post } from "@/utils/postSchema";
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { SmallMapCard} from '@/components/mapComponents/small-map-card';
+import { SmallMapCard } from '@/components/mapComponents/small-map-card';
 
 type PostCardProps = {
   post: Post;
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   postContainer: {
     justifyContent: "space-between",
     borderRadius: 10,
+    marginHorizontal: 6,
     alignItems: "center",
     backgroundColor: colors.primary,
   },
