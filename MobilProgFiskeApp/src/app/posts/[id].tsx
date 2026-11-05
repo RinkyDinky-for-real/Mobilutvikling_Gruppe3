@@ -1,11 +1,10 @@
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Pressable, Alert } from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/styles/global';
 import { Map, Camera } from '@maplibre/maplibre-react-native';
-import { useCallback, useState } from 'react';
-import { fetchSinglePost } from '@/hooks/use-Fetch-Posts';
-import { Post } from '@/utils/postSchema';
+import { useMemo } from 'react';
+import { postSchema } from '@/utils/postSchema';
 import { useAuth } from '@/utils/context';
 import { Spacing } from '@/constants/theme';
 import { DeletePost } from '@/hooks/use-Delete-Post';
@@ -13,54 +12,51 @@ import { DeletePost } from '@/hooks/use-Delete-Post';
 
 export default function PostDetails() {
   const { userId } = useAuth();
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const [postData, setPostData] = useState<Post | null>(null);
-  const [loading, setLoading] = useState(true);
-  //const isOwnerOfPost = postData?.userId === userId;
-  useFocusEffect(
-  useCallback(() => {
-    let active = true;
 
-    async function loadPost() {
-      setLoading(true);
+  const { id, postData: serializedPost } = useLocalSearchParams<{
+    id: string;
+    postData?: string;
+  }>();
 
-      try {
-        if (!userId) {
-          setPostData(null);
-          return;
-        }
-
-        const result = await fetchSinglePost(id, userId);
-
-        if (active) {
-          setPostData(result[0] ?? null);
-        }
-      } catch (error) {
-        console.error("Failed to load post data:", error);
-        if (active) setPostData(null);
-      } finally {
-        if (active) setLoading(false);
-      }
+  // Converting JSON string back into a post object
+  const postData = useMemo(() => {
+    if (!serializedPost) {
+      return null;
     }
 
-    void loadPost();
-    return () => {
-      active = false;
-    };
-  }, [id, userId])
-  );
-  
+    try {
+      const parsed = JSON.parse(serializedPost);
 
-  if (loading) {
-  return <ActivityIndicator size="large" color={'#000000'} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
-  }
+      // Validate the data with Zod schema
+      const result = postSchema.safeParse(parsed);
+
+      if (!result.success) {
+        console.error("Invalid post data:", result.error);
+        return null;
+      }
+
+      if (result.data.postId !== id) {
+        return null;
+      }
+
+      return result.data;
+
+    } catch (error) {
+      console.error("Failed to parse post data:", error);
+      return null;
+    }
+  }, [id, serializedPost]);
+
   if (!postData) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Post not found</Text>
+        <Text style={styles.title}>
+          Post not found
+        </Text>
       </View>
     );
   }
+
   async function handleDeletePost() {
     if (!userId) {
       Alert.alert("Delete failed", "You are not logged in");
@@ -109,7 +105,7 @@ export default function PostDetails() {
                 </View>
             </View>
       </ScrollView>
-        </SafeAreaProvider>
+    </SafeAreaProvider>
   );
 }
 

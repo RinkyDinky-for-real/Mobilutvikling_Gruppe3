@@ -139,12 +139,15 @@ export default function ProfileScreen() {
   };
   }, [userId]);
 
-    function openPost(postId: string) {
-        router.push({
-          pathname: '/posts/[id]',
-          params: { id: postId },
-        });
-      }
+  function openPost(post: Post) {
+    router.push({
+      pathname: '/posts/[id]',
+      params: {
+        id: post.postId,
+        postData: JSON.stringify(post),
+      },
+    });
+  }
   return (
 
     <SafeAreaProvider>
@@ -157,7 +160,7 @@ export default function ProfileScreen() {
                 renderItem={({ item }) => (
                   <PostCard
                     post={item}
-                    onOpen={() => openPost(item.postId)}
+                    onOpen={() => openPost(item)}
                   />
                 )}
         

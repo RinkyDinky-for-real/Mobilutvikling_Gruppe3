@@ -65,12 +65,15 @@ export default function FeedScreen() {
     };
   }, [userId]);
 
-  // Replace later with use-fetch-posts hook to fetch a single post and navigate to the post page
-  function openPost(postId: string) {
-   router.push({
+ 
+  function openPost(post: Post) {
+    router.push({
       pathname: '/posts/[id]',
-      params: { id: postId },
-    });;
+      params: {
+        id: post.postId,
+        postData: JSON.stringify(post),
+      },
+    });
   }
 
   return (
@@ -90,7 +93,7 @@ export default function FeedScreen() {
         renderItem={({ item }) => (
           <PostCard
             post={item}
-            onOpen={() => openPost(item.postId)}
+            onOpen={() => openPost(item)}
           />
         )}
 
